@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
 import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
@@ -12,23 +11,10 @@ import NotFound from "./notfound/page";
 import ApiCreation from "./createapi/page";
 import Devhub from "./devhub/page";
 
-import { getSubdomain } from "../utils/subdomain";
-
 const App = () => {
   const pathname = usePathname();
-  const subdomain = getSubdomain();
-  const [currentSubdomain, setCurrentSubdomain] = useState('');
-
-  useEffect(() => {
-    setCurrentSubdomain(getSubdomain());
-    console.log("Current subdomain:", getSubdomain());
-  }, []);
-
+  
   const renderContent = () => {
-    if (subdomain) {
-      console.log(`Rendering for subdomain: ${subdomain}`);
-    }
-
     if (pathname === '/') return <CreateJobPage />;
     if (pathname === '/dashboard') return <DashboardPage />;
     if (pathname === '/leaderboard') return <LeaderboardPage />;
@@ -38,6 +24,7 @@ const App = () => {
       return <Devhub slug={slug} />;
     }
     if (pathname === '/api') return <ApiCreation />;
+    console.log(pathname);
     
     return <NotFound />;
   };
