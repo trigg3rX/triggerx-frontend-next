@@ -6,9 +6,8 @@ import Image from "next/image";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import logo from "../../assets/logo.svg";
 import nav from "../../assets/nav.svg";
-import { FiInfo } from "react-icons/fi";
-import leaderboardNav from "../../assets/leaderboardNav.svg"; // Import leaderboard nav image
-import devhubNav from "../../assets/devhubNav.png"; // Import devhub nav image
+import leaderboardNav from "../../assets/leaderboardNav.svg";
+import devhubNav from "../../assets/devhubNav.png";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -19,8 +18,7 @@ function Header() {
   const navRef = useRef();
   const isActiveRoute = (path) => pathname === path;
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showInfoTooltip, setShowInfoTooltip] = useState(false);
-  const [navImage, setNavImage] = useState(nav); // State for nav image URL
+  const [navImage, setNavImage] = useState(nav);
 
   const handleMouseEnter = (event) => {
     const hoveredElement = event.currentTarget;
@@ -29,12 +27,6 @@ function Header() {
     const navRect = navRef.current
       ? navRef.current.getBoundingClientRect()
       : { x: 0, y: 0, width: 0, height: 0 };
-
-    const direction = prevRect
-      ? rect.x > prevRect.x
-        ? "right"
-        : "left"
-      : "none";
 
     setHighlightStyle({
       opacity: 1,
@@ -55,7 +47,6 @@ function Header() {
     }));
   };
 
-  // Detect scroll position
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
@@ -67,12 +58,11 @@ function Header() {
     };
   }, []);
 
-  // Update nav image based on route
   useEffect(() => {
     if (pathname === "/leaderboard") {
-      setNavImage(leaderboardNav); // Use leaderboard image
+      setNavImage(leaderboardNav); 
     } else if (pathname === "/devhub") {
-      setNavImage(devhubNav); // Use devhub image
+      setNavImage(devhubNav);
     } else {
       setNavImage(nav);
     }
@@ -87,8 +77,6 @@ function Header() {
           </a>
         </div>
         <div className="relative flex flex-col items-center">
-          {/* Background Image */}
-          {/* Background Image */}
           <Image
             src={navImage}
             alt="Background Design"
@@ -102,7 +90,6 @@ function Header() {
             priority
           />
 
-          {/* Foreground Navigation */}
           <nav
             ref={navRef}
             className="relative bg-[#181818F0] rounded-xl z-10"
@@ -174,29 +161,6 @@ function Header() {
         <div className="flex items-center">
           {" "}
           <ConnectButton chainStatus="icon" accountStatus="address" />
-          {/* <div className="relative">
-            <FiInfo
-              className="text-gray-400 hover:text-white cursor-pointer ml-2"
-              size={20}
-              onMouseEnter={() => setShowInfoTooltip(true)}
-              onMouseLeave={() => setShowInfoTooltip(false)}
-            />
-            {showInfoTooltip && (
-              <div className="absolute right-0 mt-2 p-4 bg-[#181818] rounded-xl border border-[#4B4A4A] shadow-lg z-50 w-[280px]">
-                <div className="flex flex-col gap-2 text-sm text-gray-300">
-                  <div className="flex items-center gap-2">
-                    <span>• View only permissions</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span>• Smart contract audit</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span>• Trusted by 418k traders</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div> */}
         </div>
       </div>
       <div className="w-[90%] mx-auto flex justify-between items-center my-10 header sm:flex  lg:hidden md:flex">
@@ -209,20 +173,16 @@ function Header() {
         >
           <Image src={nav} alt="Nav" className="w-64 h-auto z-0" width={200} height={100} priority />
         </div>
-        {/* Logo */}
         <div className="flex-shrink-0 relative z-10">
           <a href="https://www.triggerx.network/" target="blank">
             <Image src={logo} alt="Logo" width={120} height={120} priority />
           </a>
         </div>
 
-        {/* Hamburger Menu and Navigation */}
         <div className="relative flex items-center gap-5">
-          {/* Connect Wallet Button */}
           <div className="flex-shrink-0 relative z-10 ">
             <ConnectButton chainStatus="none" accountStatus="address" />
           </div>
-          {/* Hamburger Menu for Mobile */}
           <div className="lg:hidden">
             <h4
               onClick={() => setMenuOpen(!menuOpen)}

@@ -16,16 +16,13 @@ export function useProxyFactory() {
       if (!targetAddress) throw new Error("Target address is required");
       if (!userAddress) throw new Error("User address is required");
       
-      // Get the current nonce for the user's address
       const nonce = await publicClient.getTransactionCount({
         address: userAddress
       });
       
-      // Create a deterministic salt by combining target address, user address, and nonce
       const saltString = `${targetAddress.toLowerCase()}-${userAddress.toLowerCase()}-${nonce}`;
       console.log("Generating salt with:", saltString);
       
-      // Convert to bytes and hash
       const saltBytes = ethers.toUtf8Bytes(saltString);
       const salt = ethers.keccak256(saltBytes);
       console.log("Generated salt:", salt);
@@ -52,11 +49,9 @@ export function useProxyFactory() {
 
       const salt = await generateSalt(target);
       
-      // Get the proxy address before deployment
       const proxyAddress = await factoryContract.getProxyAddress(target, salt);
       console.log("Calculated proxy address:", proxyAddress);
       
-      // Deploy proxy
       const tx = await factoryContract.deployProxy(target, salt);
       console.log("Deployment transaction:", tx);
       await tx.wait();

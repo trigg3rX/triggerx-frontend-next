@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 
-//ContractDetails.js
 export function ContractDetails({
   contractAddress,
   setContractAddress,
@@ -33,7 +32,6 @@ export function ContractDetails({
   const hasArguments = selected?.inputs?.length > 0;
 
   const dropdownRef = useRef(null);
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -46,7 +44,6 @@ export function ContractDetails({
   }, []);
 
   const dropdown2Ref = useRef(null);
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -127,12 +124,6 @@ export function ContractDetails({
           );
           console.log("Setting writable functions:", writableFunctions);
           setFunctions(writableFunctions);
-
-          // Extract and set events
-          // const contractEvents = extractEvents(data.result);
-          // console.log("Setting contract events:", contractEvents);
-          // setEvents(contractEvents);
-
           setContractABI(data.result);
         } else {
           throw new Error(`Failed to fetch ABI: ${data.message}`);
@@ -151,26 +142,6 @@ export function ContractDetails({
     const selectedValue = e.target.value;
     console.log("Function selection changed to:", selectedValue);
     setTargetFunction(selectedValue);
-
-    // const func = functions.find(
-    //   (f) =>
-    //     `${f.name}(${f.inputs.map((input) => input.type).join(",")})` ===
-    //     selectedValue
-    // );
-    // setSelectedFunction(func);
-
-    // Reset argument type if function has no inputs
-    // if (!func?.inputs?.length) {
-    //   setArgumentType("static");
-    // }
-
-    // if (func) {
-    //   setFunctionInputs(func.inputs.map(() => ""));
-    //   setArgArray(func.inputs.map(() => ""));
-    // } else {
-    //   setFunctionInputs([]);
-    //   setArgArray([]);
-    // }
   };
 
   const handleFunctionSelect = (signature) => {
@@ -182,13 +153,6 @@ export function ContractDetails({
     const newType = e.target.value;
     console.log("Argument type changed to:", newType);
     setArgumentType(newType);
-
-    // Clear inputs when switching to dynamic
-    // if (newType === "dynamic") {
-    //   const emptyInputs = selectedFunction?.inputs?.map(() => "") || [];
-    //   setFunctionInputs(emptyInputs);
-    //   setArgArray(emptyInputs);
-    // }
   };
 
   const isDisabled = argumentType === "dynamic";
@@ -197,17 +161,6 @@ export function ContractDetails({
     const newInputs = [...argsArray];
     newInputs[index] = value;
     setArgArray(newInputs);
-
-    // if (newInputs.every((input) => input !== "")) {
-    //   const bytesArray = newInputs.map((arg) => {
-    //     const hexValue = ethers.toBeHex(arg);
-    //     return hexValue.length % 2 === 0 ? hexValue : `0x0${hexValue.slice(2)}`;
-    //   });
-    //   setArgumentsInBytes(bytesArray);
-    // } else {
-    //   console.log("Not all inputs filled, clearing bytes array");
-    //   setArgumentsInBytes([]);
-    // }
   };
 
   const handleCodeUrlChange = (e) => {
@@ -220,14 +173,11 @@ export function ContractDetails({
     } else if (!isValidIpfsUrl(value)) {
       setIpfsCodeUrlError("Invalid IPFS URL format.");
     } else {
-      setIpfsCodeUrlError(""); // Clear the error if valid
+      setIpfsCodeUrlError("");
     }
   };
 
   const isValidIpfsUrl = (url) => {
-    // Implement your IPFS URL validation logic here.
-    // This is a placeholder; replace with a robust check.
-    // Example:  Check if it starts with "ipfs://" or "https://ipfs.io/ipfs/"
     return url.startsWith("ipfs://") || url.startsWith("https://");
   };
 
@@ -396,11 +346,6 @@ export function ContractDetails({
                   )}
                 </div>
               </div>
-              {/* <h4 className="w-full md:w-[67%] xl:w-[78%] ml-auto text-xs text-gray-400">
-                {hasArguments
-                  ? "Select how function arguments should be handled during execution"
-                  : "No arguments required for this function"}
-              </h4> */}
             </>
           )}
         </>

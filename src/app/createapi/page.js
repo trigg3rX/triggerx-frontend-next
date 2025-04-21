@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { FiCopy, FiCheck, FiKey } from "react-icons/fi";
+import React, { useState } from "react";
+import { FiCopy, FiCheck } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
 import { useAccount } from "wagmi";
 
@@ -7,9 +7,7 @@ const ApiCreation = () => {
   const [activeTab, setActiveTab] = useState("apikey");
   const [expandedSection, setExpandedSection] = useState(null);
   const [copiedEndpoint, setCopiedEndpoint] = useState(false);
-  const { isConnected, address } = useAccount(); // Add address from useAccount
-  const [loading, setLoading] = useState(true);
-  // Update the initial state
+  const { isConnected, address } = useAccount();
   const [apiKeys, setApiKeys] = useState([
     {
       key: "No API key generated yet",
@@ -21,21 +19,21 @@ const ApiCreation = () => {
 
   const generateNewApiKey = async () => {
     try {
-      const user = process.env.REACT_APP_USER;
+      const user = process.env.NEXT_PUBLIC_USER;
       if (!user) {
         console.error("Owner is not defined in environment variables");
         return;
       }
 
       const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/api/${user}/api-keys`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/${user}/api-keys`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            owner: address, // 使用钱包地址作为 owner
+            owner: address,
             rateLimit: 20,
           }),
         }
@@ -115,7 +113,7 @@ const ApiCreation = () => {
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     setCopiedEndpoint(true);
-    setTimeout(() => setCopiedEndpoint(false), 2000); // Reset after 2 seconds
+    setTimeout(() => setCopiedEndpoint(false), 2000);
   };
 
   return (

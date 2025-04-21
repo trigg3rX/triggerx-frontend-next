@@ -4,10 +4,8 @@ export default function DevHubItemLoading() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="animate-pulse bg-[#141414] rounded-2xl p-8">
-        {/* Header skeleton */}
         <div className="h-10 bg-gray-700 rounded w-3/4 max-w-lg mb-6"></div>
         
-        {/* Creator info */}
         <div className="flex items-center gap-4 mb-8">
           <div className="h-12 w-12 bg-gray-700 rounded-full"></div>
           <div>
@@ -16,7 +14,6 @@ export default function DevHubItemLoading() {
           </div>
         </div>
         
-        {/* Description */}
         <div className="mb-10">
           <div className="h-5 bg-gray-700 rounded w-full mb-3"></div>
           <div className="h-5 bg-gray-700 rounded w-3/4 mb-3"></div>
@@ -24,7 +21,6 @@ export default function DevHubItemLoading() {
           <div className="h-5 bg-gray-700 rounded w-1/2"></div>
         </div>
         
-        {/* Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div className="bg-[#1A1A1A] rounded-lg p-5 border border-[#2A2A2A]">
             <div className="h-5 bg-gray-700 rounded w-1/2 mb-4"></div>
@@ -40,7 +36,6 @@ export default function DevHubItemLoading() {
           </div>
         </div>
         
-        {/* Actions */}
         <div className="flex justify-end space-x-4">
           <div className="h-10 bg-gray-700 rounded-lg w-28"></div>
           <div className="h-10 bg-gray-700 rounded-lg w-28"></div>

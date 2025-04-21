@@ -19,7 +19,6 @@ const Leaderboard = () => {
   });
   const baseUrl = 'https://app.triggerx.network';
 
-  // Fetch data based on active tab
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -40,19 +39,17 @@ const Leaderboard = () => {
         const data = await response.json();
         console.log("Raw API response:", data);
 
-        // Transform the data to match the table structure
         if (activeTab === "keeper") {
           const transformedKeeperData = Array.isArray(data)
             ? data.map((keeper) => ({
                 operator: keeper.keeper_name,
                 address: keeper.keeper_address,
                 performed: keeper.tasks_executed,
-                attested: keeper.tasks_executed, // If you don't have a separate attested field
+                attested: keeper.tasks_executed,
                 points: keeper.keeper_points,
               }))
             : [];
 
-          // Sort the keepers by points in descending order
           transformedKeeperData.sort((a, b) => b.points - a.points);
 
           setLeaderboardData((prev) => ({
@@ -64,12 +61,11 @@ const Leaderboard = () => {
             ? data.map((user) => ({
                 address: user.user_address,
                 totalJobs: user.total_jobs,
-                tasksExecuted: user.tasks_completed, // If you don't have a separate attested field
+                tasksExecuted: user.tasks_completed, 
                 points: user.user_points,
               }))
             : [];
 
-          // Sort developers by points in descending order
           transformedUserData.sort((a, b) => b.points - a.points);
 
           setLeaderboardData((prev) => ({
@@ -77,7 +73,6 @@ const Leaderboard = () => {
             developers: transformedUserData,
           }));
         } else {
-          // Sort contributors by points in descending order if they exist
           const sortedContributors = Array.isArray(data)
             ? [...data].sort((a, b) => b.points - a.points)
             : [];
@@ -95,7 +90,7 @@ const Leaderboard = () => {
     };
 
     fetchData();
-  }, [activeTab]); // Re-fetch when activeTab changes
+  }, [activeTab]);
 
   const copyAddressToClipboard = async (address, id) => {
     await navigator.clipboard.writeText(address);
@@ -107,12 +102,10 @@ const Leaderboard = () => {
     }, 2000);
   };
 
-  // Get the appropriate data for the active tab
   const keeperData = leaderboardData.keepers || [];
   const developerData = leaderboardData.developers || [];
   const contributorData = leaderboardData.contributors || [];
 
-  // Render keeper/operators table
   const renderKeeperTable = () => {
     return (
       <table className="w-full border-separate border-spacing-y-4 h-[650px]">
@@ -192,7 +185,6 @@ const Leaderboard = () => {
     );
   };
 
-  // Render developer table with different columns
   const renderDeveloperTable = () => {
     return (
       <table className="w-full border-separate border-spacing-y-4 h-[650px]">
@@ -348,14 +340,12 @@ const Leaderboard = () => {
         <title>TriggerX | Leaderboard</title>
         <meta name="description" content="View real-time rankings and performance metrics for TriggerX operators, developers, and contributors" />
         
-        {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={`TriggerX | ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Leaderboard`} />
         <meta property="og:description" content="View real-time rankings and performance metrics for TriggerX operators, developers, and contributors" />
         <meta property="og:image" content={`${baseUrl}/images/${activeTab}-og.png`} />
         <meta property="og:url" content={`${baseUrl}/leaderboard`} />
         
-        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`TriggerX | ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Leaderboard`} />
         <meta name="twitter:description" content="View real-time rankings and performance metrics for TriggerX operators, developers, and contributors" />
@@ -406,7 +396,6 @@ const Leaderboard = () => {
               msOverflowStyle: "none",
             }}
           >
-            {/* Only render the table when not loading */}
             {!isLoading &&
               (activeTab === "keeper"
                 ? renderKeeperTable()
@@ -414,7 +403,6 @@ const Leaderboard = () => {
                 ? renderDeveloperTable()
                 : renderContributorTable())}
 
-            {/* Display loading or error states */}
             {isLoading && <LeaderboardSkeleton activeTab={activeTab} />}
 
 

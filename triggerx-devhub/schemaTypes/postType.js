@@ -93,7 +93,6 @@ export const postType = defineType({
               type: 'url',
               validation: (Rule) =>
                 Rule.uri({allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel']}),
-              // Or use a 'reference' type if linking to other Sanity documents
             },
           ],
           preview: {
@@ -125,7 +124,6 @@ export const postType = defineType({
           preview: {
             select: {title: 'title', subtitle: 'text'},
             prepare({title, content}) {
-              // Basic text extraction for preview
               const block = (content || []).find((block) => block._type === 'block')
               const text = block
                 ? block.children

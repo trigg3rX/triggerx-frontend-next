@@ -41,7 +41,7 @@ function DashboardPage() {
     id: 1,
     type: "Condition-based",
     status: "Active",
-  }); // Example data with more than 7 rows
+  });
 
   const toggleJobExpand = (jobId) => {
     setExpandedJobs((prev) => ({
@@ -61,10 +61,8 @@ function DashboardPage() {
 
   useEffect(() => {
     const initializeProvider = async () => {
-      // console.log("Initializing provider...");
       if (typeof window.ethereum !== "undefined") {
         const ethProvider = new ethers.BrowserProvider(window.ethereum);
-        // console.log(ethProvider);
         setProvider(ethProvider);
         setIsWalletInstalled(true);
       } else {
@@ -124,7 +122,6 @@ function DashboardPage() {
     const jobCreatorContractAddress =
       "0x98a170b9b24aD4f42B6B3630A54517fd7Ff3Ac6d";
     const jobCreatorABI = [
-      // Contract ABI...
     ];
     return new ethers.Contract(
       jobCreatorContractAddress,
@@ -141,10 +138,6 @@ function DashboardPage() {
     try {
       const signer = await provider.getSigner();
       const userAddress = await signer.getAddress();
-
-      // console.log(userAddress, "address");
-
-      // Fetch job details from the ScyllaDB API
       const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
       const response = await fetch(
@@ -157,7 +150,6 @@ function DashboardPage() {
       const jobsData = await response.json();
       console.log("Fetched jobs data:", jobsData);
 
-      // First, create a lookup for quick access by job_id
       const jobMap = {};
       jobsData.forEach((job) => {
         jobMap[job.job_id] = job;
@@ -166,17 +158,14 @@ function DashboardPage() {
       // Build the linkedJobsMap
       const linkedJobsMap = {};
       jobsData.forEach((job) => {
-        // Only process main jobs (chain_status === 0)
         if (job.chain_status === 0) {
           let mainJobId = job.job_id;
           let linkedJobs = [];
-          // Start the chain from the main job's link_job_id
           let nextJobId = job.link_job_id;
 
-          // Follow the chain until link_job_id is -1
           while (nextJobId !== -1) {
             const nextJob = jobMap[nextJobId];
-            if (!nextJob) break; // in case of missing data
+            if (!nextJob) break;
             linkedJobs.push(nextJob);
             nextJobId = nextJob.link_job_id;
           }
@@ -185,21 +174,17 @@ function DashboardPage() {
         }
       });
 
-      // Now create your tempJobs array by filtering main jobs and adding their linked jobs
       const tempJobs = jobsData
         .filter(
           (jobDetail) => jobDetail.chain_status === 0 && !jobDetail.status
-        ) // Only main jobs with status === false
+        )
         .map((jobDetail) => ({
           id: jobDetail.job_id,
           type: mapJobType(jobDetail.job_type),
-          status: "Active", // Only including jobs where status is false
+          status: "Active",
           linkedJobs: linkedJobsMap[jobDetail.job_id] || [],
         }));
 
-      // console.log(tempJobs);
-
-      // console.log("All formatted jobs:", tempJobs);
       setJobDetails(tempJobs);
       if (tempJobs.length === 0 && connected && !loading) {
         toast("No jobs found. Create a new job to get started!", {
@@ -208,7 +193,6 @@ function DashboardPage() {
       }
     } catch (error) {
       if (connected && error.message !== "Failed to fetch") {
-        // Only show error toast for actual server errors, not for no jobs
         toast.error("Failed to fetch jobs. Please try again later.");
       }
     } finally {
@@ -216,9 +200,7 @@ function DashboardPage() {
     }
   };
 
-  // Helper function to map job type ID to label
   const mapJobType = (jobTypeId) => {
-    // Convert jobTypeId to string to handle both string and number types
     const typeId = String(jobTypeId);
 
     switch (typeId) {
@@ -239,7 +221,6 @@ function DashboardPage() {
     }
   };
 
-  // useEffect to fetch job details on component mount
   useEffect(() => {
     if (!window.ethereum) {
       return;
@@ -264,7 +245,7 @@ function DashboardPage() {
         );
       }
     };
-  }, [provider]); // Add provider to dependency array
+  }, [provider]);
 
   useEffect(() => {
     const checkConnection = async () => {
@@ -279,7 +260,6 @@ function DashboardPage() {
           method: "eth_accounts",
         });
         if (accounts.length === 0) {
-          // Clear any existing toasts before showing connection message
           toast.dismiss();
           toast.error("Please connect your wallet to continue!");
         }
@@ -305,9 +285,6 @@ function DashboardPage() {
 
   const handleDeleteJob = async (jobId) => {
     try {
-      // Delete the job from the database
-      // console.log("delete job");
-
       const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
       const response = await fetch(`${API_BASE_URL}/api/jobs/delete/${jobId}`, {
@@ -320,10 +297,8 @@ function DashboardPage() {
 
       toast.success("Job deleted successfully");
 
-      // Fetch the updated job details
       await fetchJobDetails();
     } catch (error) {
-      // console.error("Error deleting job:", error);
       toast.error("Failed to delete job");
     }
   };
@@ -375,14 +350,11 @@ function DashboardPage() {
         selectedJob.apiEndpoint
       );
 
-      // console.log("Job updated successfully:", result);
       toast.success("Job updated successfully");
 
-      // Refresh job details after update
       await fetchJobDetails();
       handleCloseModal();
     } catch (error) {
-      // console.error("Error updating job:", error);
       toast.error("Error updating job");
     }
   };
@@ -417,7 +389,6 @@ function DashboardPage() {
     }
 
     try {
-      // const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const userAddress = await signer.getAddress();
 
@@ -428,10 +399,8 @@ function DashboardPage() {
       );
 
       const [_, tgBalance] = await stakeRegistryContract.getStake(userAddress);
-      // console.log("Raw TG Balance:", tgBalance.toString());
       setTgBalance(ethers.formatEther(tgBalance));
     } catch (error) {
-      // console.error("Error fetching TG balance:", error);
     }
   };
 
@@ -458,13 +427,10 @@ function DashboardPage() {
         ["function stake(uint256 amount) external payable returns (uint256)"],
         signer
       );
-      // console.log("Stake contract:", stakingContract);
 
       const stakeAmountInWei = ethers.parseEther(stakeAmount.toString());
-      // console.log("Stake Amount in Wei:", stakeAmountInWei.toString());
 
       if (stakeAmountInWei === 0n) {
-        // ✅ Correct way to check if BigInt is zero
         throw new Error("Stake amount must be greater than zero.");
       }
 
@@ -479,7 +445,6 @@ function DashboardPage() {
       setStakeModalVisible(false);
       setStakeAmount("");
     } catch (error) {
-      // console.error("Error staking:", error);
       toast.error("Staking failed ");
       setStakeModalVisible(false);
       setStakeAmount("");
@@ -489,7 +454,6 @@ function DashboardPage() {
   };
 
   useEffect(() => {
-    // Check if MetaMask or any web3 wallet is installed
     if (typeof window.ethereum === "undefined") {
       setIsWalletInstalled(false);
       setShowModal(true);
@@ -507,7 +471,6 @@ function DashboardPage() {
     return num.toFixed(4);
   };
 
-  // Render the component
   if (loading) {
     return <DashboardLoading />;
   }
@@ -530,8 +493,8 @@ function DashboardPage() {
         className="mt-10"
         toastOptions={{
           style: {
-            background: "#0a0a0a", // Dark background
-            color: "#fff", // White text
+            background: "#0a0a0a",
+            color: "#fff",
             borderRadius: "8px",
             border: "1px gray solid",
           },
@@ -583,7 +546,6 @@ function DashboardPage() {
                                 <tr key={job.id} className="  ">
                                   <td className="px-5 py-5 text-[#A2A2A2] md:text-md lg:text-lg xs:text-[12px] text-center border border-r-0 border-[#2A2A2A] rounded-tl-lg rounded-bl-lg bg-[#1A1A1A]">
                                     {index + 1}{" "}
-                                    {/* Display sequential number instead of job.id */}
                                   </td>
                                   <td className="bg-[#1A1A1A] px-6 py-5 text-[#A2A2A2] md:text-md lg:text-lg xs:text-[12px] border border-l-0 border-r-0 border-[#2A2A2A]">
                                     {job.type}

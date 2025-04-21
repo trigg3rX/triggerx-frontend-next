@@ -30,13 +30,13 @@ export function EstimatedFeeModal({
 
   const [currentStep, setCurrentStep] = useState(0);
   const canvasRef = useRef(null);
-  const [character, setCharacter] = useState([{ x: 10, y: 10 }]); // Character instead of snake
+  const [character, setCharacter] = useState([{ x: 10, y: 10 }]);
   const [food, setFood] = useState({ x: 15, y: 15 });
   const [direction, setDirection] = useState("RIGHT");
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
-  const [frameIndex, setFrameIndex] = useState(0); // Track animation frame
+  const [frameIndex, setFrameIndex] = useState(0);
 
   const gridSize = 17;
   const tileSize = 28;
@@ -45,7 +45,7 @@ export function EstimatedFeeModal({
 
   const resetProcessing = () => {
     setCurrentStep(0);
-    setGameStarted(false); // Reset game state as well
+    setGameStarted(false);
     setCharacter([{ x: 10, y: 10 }]);
     setFood({ x: 15, y: 15 });
     setDirection("RIGHT");
@@ -79,18 +79,15 @@ export function EstimatedFeeModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [gameOver, gameStarted]);
 
-  // Load character frames
   const characterFrames = [];
   for (let i = 1; i <= 10; i++) {
     const img = new Image();
-    img.src = `/character/frame${i}.svg`; // Update with actual path
+    img.src = `/character/frame${i}.svg`;
     characterFrames.push(img);
   }
 
-  // Load Ethereum token image
   const ethImage = new Image();
   ethImage.src = "/character/token.svg";
-    // "https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg";
 
   useEffect(() => {
     if (!gameStarted || gameOver) return;
@@ -118,7 +115,6 @@ export function EstimatedFeeModal({
             break;
         }
 
-        // Check if character hits the boundary
         if (
           head.x < 0 ||
           head.x >= gridSize ||
@@ -131,23 +127,20 @@ export function EstimatedFeeModal({
 
         newCharacter.unshift(head);
 
-        // Check for food collision
         if (head.x === food.x && head.y === food.y) {
           setScore((prev) => prev + 0.5);
           setFood({
             x: Math.floor(Math.random() * gridSize),
             y: Math.floor(Math.random() * gridSize),
           });
-          // Trigger "+1" animation at the food's position
           setFoodEatenAnimation({ x: food.x, y: food.y });
-          setTimeout(() => setFoodEatenAnimation(null), 500); // Duration of the animation (0.5 seconds)
+          setTimeout(() => setFoodEatenAnimation(null), 500);
         } else {
           newCharacter.pop();
         }
 
         return newCharacter;
       });
-      // Update frame for animation
       setFrameIndex((prev) => (prev + 1) % 10);
     };
 
@@ -165,7 +158,6 @@ export function EstimatedFeeModal({
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw Character
     const currentFrame = characterFrames[frameIndex];
     character.forEach((segment) => {
       ctx.save();
@@ -189,7 +181,6 @@ export function EstimatedFeeModal({
       ctx.restore();
     });
 
-    // Draw Ethereum token
     ctx.drawImage(
       ethImage,
       food.x * tileSize,
@@ -198,14 +189,13 @@ export function EstimatedFeeModal({
       tileSize
     );
 
-    // Draw "+1" animation
     if (foodEatenAnimation) {
       ctx.fillStyle = "white";
       ctx.font = "20px Arial";
       ctx.fillText(
         "+1",
         foodEatenAnimation.x * tileSize + tileSize / 4,
-        foodEatenAnimation.y * tileSize + tileSize / 1.5 // Adjust vertical position
+        foodEatenAnimation.y * tileSize + tileSize / 1.5
       );
     }
 
@@ -257,13 +247,13 @@ export function EstimatedFeeModal({
 
   useEffect(() => {
     if (isOpen) {
-      resetProcessing(); // Reset on modal open
+      resetProcessing();
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = "unset"; // Cleanup on unmount
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -281,13 +271,13 @@ export function EstimatedFeeModal({
 
   const handleClose = () => {
     resetProcessing();
-    document.body.style.overflow = "unset"; // Enable scroll on close
+    document.body.style.overflow = "unset";
     onClose();
   };
 
   const handleStake = () => {
-    resetProcessing(); // Reset before staking, if needed
-    document.body.style.overflow = "unset"; // Enable scroll on stake
+    resetProcessing();
+    document.body.style.overflow = "unset";
     onStake();
   };
 
@@ -306,7 +296,6 @@ export function EstimatedFeeModal({
               <h3 className="text-white text-xl text-center">Creating Job</h3>
 
               <div>
-                {/* Show only the current step's text */}
                 {currentStep < steps.length && (
                   <div
                     key={steps[currentStep].id}
@@ -315,7 +304,6 @@ export function EstimatedFeeModal({
                     <h4 className="text-md">{steps[currentStep].text}</h4>
                   </div>
                 )}
-                {/* After steps are complete, show last step */}
                 {currentStep >= steps.length && (
                   <div
                     key={steps[steps.length - 1].id}
@@ -438,19 +426,18 @@ export function EstimatedFeeModal({
               <div className="flex gap-4">
                 {hasEnoughBalance ? (
                   <button
-                    onClick={handleStake} // Use handleStake
-                    // disabled={!estimatedFee || estimatedFee <= 0} // Disable if fee is invalid
+                    onClick={handleStake}
                     className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
                       !estimatedFee || estimatedFee <= 0
-                        ? "bg-gray-400 text-gray-700 " // Disabled styles
-                        : "bg-white text-black" // Enabled styles
+                        ? "bg-gray-400 text-gray-700"
+                        : "bg-white text-black"
                     }`}
                   >
                     Next
                   </button>
                 ) : (
                   <button
-                    onClick={handleStake} // Use handleStake
+                    onClick={handleStake}
                     disabled={!hasEnoughEthToStake}
                     className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
                       !hasEnoughEthToStake
@@ -462,7 +449,7 @@ export function EstimatedFeeModal({
                   </button>
                 )}
                 <button
-                  onClick={handleClose} // Use handleClose
+                  onClick={handleClose}
                   className="flex-1 px-6 py-3 bg-white/10 rounded-lg font-semibold hover:bg-white/20 transition-all duration-300"
                 >
                   Cancel

@@ -23,9 +23,7 @@ export function useJobCreation() {
     if (event?.target) {
       const url = event.target.value;
       setCodeUrls((prev) => {
-        // If jobType already exists as an array, make a copy; otherwise, initialize it as an empty array.
         const urls = prev[jobType] ? [...prev[jobType]] : [];
-        // If jobId is provided, update that index; otherwise, update index 0 for the main job.
         if (jobId !== null) {
           urls[jobId] = url;
         } else {
@@ -53,36 +51,9 @@ export function useJobCreation() {
     codeUrls
   ) => {
     try {
-      // const provider = new ethers.BrowserProvider(window.ethereum);
-      // const contract = new ethers.Contract(contractAddress, contractABI, provider);
-      // const functionFragment = contract.interface.getFunction(targetFunction);
-
-      // const params = functionFragment.inputs.map((input, index) => {
-      //   if (index < argsArray.length) {
-      //     return argsArray[index];
-      //   }
-      // });
-
-      // const gasEstimate = await contract[functionFragment.name].estimateGas(...params);
-      // const gasEstimateStr = gasEstimate.toString();
-      // setGasUnits(gasEstimateStr);
-      // console.log('Gas estimate:', gasEstimateStr);
-
-      // const feeData = await provider.getFeeData();
-      // const gasPrice = feeData.gasPrice;
-      // console.log('Gas price:', gasPrice.toString());
-
-      // const feeInWei = gasEstimate * gasPrice;
-      // const feeInEth = ethers.formatEther(feeInWei);
-      // console.log('Fee for one execution:', feeInEth, 'ETH');
-
       const executionCount = Math.ceil(timeframeInSeconds / intervalInSeconds);
 
-      // const overallFee = Number(feeInEth) * executionCount;
-      // console.log('Overall fee:', overallFee.toFixed(18), 'ETH');
-
       let totalFeeTG = 0;
-      // user TG balance
       console.log("Ipfs:", codeUrls);
 
       if (codeUrls) {
@@ -106,17 +77,15 @@ export function useJobCreation() {
             throw new Error("Failed to get fees");
           }
 
-          const data = await response.json(); // Parse the response body
-          console.log("Response data:", data); // Log the response data
+          const data = await response.json();
+          console.log("Response data:", data);
 
-          // Check if the response contains an error
           if (data.error) {
-            throw new Error(data.error); // Handle the error from the response
+            throw new Error(data.error);
           }
 
           totalFeeTG = Number(data.total_fee) * executionCount;
 
-          // Calculate stake amount in ETH and convert to Gwei
           const stakeAmountEth = totalFeeTG * 0.001;
 
           console.log("Total TG fee required:", totalFeeTG.toFixed(18), "TG");
@@ -154,7 +123,7 @@ export function useJobCreation() {
 
       const stakeRegistryContract = new ethers.Contract(
         stakeRegistryAddress,
-        ["function getStake(address) view returns (uint256, uint256)"], // Assuming getStake returns (TG balance, other value)
+        ["function getStake(address) view returns (uint256, uint256)"],
         provider
       );
 
@@ -166,7 +135,6 @@ export function useJobCreation() {
       toast.error("Failed to fetch TG balance");
     }
   };
-  // console.log(userBalance, "my TG ......");
 
   const handleSubmit = async (
     stakeRegistryAddress,
@@ -177,7 +145,6 @@ export function useJobCreation() {
       toast.error("Please fill in all required fields");
       return;
     }
-    //stake the ETH for TG
     try {
       if (typeof window.ethereum === "undefined") {
         throw new Error("Please install MetaMask to use this feature");
@@ -192,7 +159,6 @@ export function useJobCreation() {
       }));
       console.log("updated",updatedJobDetails);
 
-      // Check if user needs to stake
       if (userBalance < estimatedFee) {
         const requiredEth = (0.001 * estimatedFee).toFixed(18);
         const contract = new ethers.Contract(
@@ -212,58 +178,6 @@ export function useJobCreation() {
         console.log("Stake transaction confirmed: ", tx.hash);
         toast.success("ETH staked successfully!");
       }
-
-      // Continue with job creation
-      // let nextJobId;
-      // try {
-      //   const latestIdResponse = await fetch(
-      //     "${API_BASE_URL}/api/jobs/latest-id",
-      //     {
-      //       method: "GET",
-      //       mode: "cors",
-      //       headers: {
-      //         Accept: "application/json",
-      //         Origin: "https://triggerx.network",
-      //       },
-      //     }
-      //   );
-
-      //   if (!latestIdResponse.ok) {
-      //     throw new Error("Failed to fetch latest job ID");
-      //   }
-
-      //   const latestIdData = await latestIdResponse.json();
-      //   nextJobId = latestIdData.latest_job_id + 1;
-      //   console.log("Next job ID:", nextJobId);
-      // } catch (error) {
-      //   console.error("Error fetching latest job ID:", error);
-      //   nextJobId = 1;
-      // }
-
-      // const chainIdHex = await window.ethereum.request({
-      //   method: "eth_chainId",
-      // });
-      // const chainIdDecimal = parseInt(chainIdHex, 16).toString();
-
-      // const jobData = {
-      //   job_id: nextJobId,
-      //   jobType: jobType,
-      //   user_address: signer.address,
-      //   chain_id: chainIdDecimal,
-      //   time_frame: timeframeInSeconds,
-      //   time_interval: intervalInSeconds,
-      //   contract_address: contractAddress,
-      //   target_function: targetFunction,
-      //   arg_type: argType,
-      //   arguments: argsArray,
-      //   status: true,
-      //   job_cost_prediction: parseInt(gasUnits),
-      //   script_function: scriptFunction,
-      //   script_ipfs_url: codeUrls[jobType],
-      //   stake_amount: Number(estimatedFeeInGwei.toString()),
-      //   user_balance: 0.0,
-      //   required_tg: estimatedFee,
-      // };
 
       const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 

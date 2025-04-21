@@ -14,7 +14,6 @@ import { useStakeRegistry } from "../../hooks/useStakeRegistry";
 import { useAccount } from "wagmi";
 import { optimismSepolia, baseSepolia } from "wagmi/chains";
 import { Toaster, toast } from "react-hot-toast";
-// import ProcessModal from "./components/ProcessModel";
 import Layout from "@/components/layout/Layout";
 import Head from "next/head";
 import Image from "next/image";
@@ -35,7 +34,6 @@ import { randomBytes } from "ethers";
 const networkIcons = {
   [optimismSepolia.name]: (
     <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Optimism SVG path */}
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -57,14 +55,11 @@ const networkIcons = {
 const supportedNetworks = [optimismSepolia, baseSepolia];
 
 const useFormKeyboardNavigation = () => {
-  // This ref will help us avoid re-focusing the first input when unnecessary
 
   const handleKeyDown = (event) => {
-    // Only process if the key is Enter and not in a textarea
     if (event.key === "Enter" && event.target.tagName !== "TEXTAREA") {
-      event.preventDefault(); // Prevent form submission
+      event.preventDefault();
 
-      // Get all focusable elements in the form
       const form = event.target.closest("form");
       if (!form) return;
 
@@ -77,21 +72,17 @@ const useFormKeyboardNavigation = () => {
           !el.disabled && el.style.display !== "none" && el.type !== "submit"
       );
 
-      // Find current element index
       const currentIndex = focusableElements.indexOf(event.target);
 
-      // If it's a dropdown trigger element, open the dropdown
       if (
         event.target.getAttribute("role") === "button" ||
         event.target.closest('[role="button"]') ||
         event.target.classList.contains("cursor-pointer")
       ) {
-        // Simulate click to open dropdown
         event.target.click();
         return;
       }
 
-      // Move to next element if available
       if (currentIndex !== -1 && currentIndex < focusableElements.length - 1) {
         focusableElements[currentIndex + 1].focus();
       }
@@ -100,7 +91,6 @@ const useFormKeyboardNavigation = () => {
   return { handleKeyDown };
 };
 
-// trigger option
 const options = [
   {
     value: "1",
@@ -132,7 +122,7 @@ function CreateJobPage() {
   const [isEventOpen, setIsEventOpen] = useState(false);
   const [jobDetails, setJobDetails] = useState([]);
   const [conditionScript, setConditionScript] = useState("");
-  const { address, isConnected } = useAccount(); // Get isConnected from useAccount
+  const { address, isConnected } = useAccount();
   const [connected, setConnected] = useState(false);
   const formRef = useRef(null);
   const { handleKeyDown } = useFormKeyboardNavigation();
@@ -154,7 +144,6 @@ function CreateJobPage() {
           method: "eth_accounts",
         });
         if (accounts.length === 0) {
-          // Clear any existing toasts before showing connection message
           toast.dismiss();
           toast.error("Please connect your wallet to continue!");
         }
@@ -169,19 +158,16 @@ function CreateJobPage() {
   }, []);
 
   useEffect(() => {
-    // Simulate loading data
     const loadData = async () => {
-      // Any initialization logic here
       setTimeout(() => {
         setLoading(false);
-      }, 1000); // Show loading state for 1 second
+      }, 1000);
     };
     
     loadData();
   }, []);
 
   const eventdropdownRef = useRef(null);
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -196,7 +182,6 @@ function CreateJobPage() {
   }, []);
 
   const dropdownRef = useRef(null);
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -229,13 +214,11 @@ function CreateJobPage() {
       if (existingJobs.length < 3) {
         const newJobId = existingJobs.length + 1;
 
-        // Ensure jobType exists in contractDetails
         setContractDetails((prevDetails) => ({
           ...prevDetails,
           [jobType]: {
-            ...prevDetails[jobType], // Keep existing jobs
+            ...prevDetails[jobType],
             [newJobId]: {
-              // New linked job
               contractAddress: "",
               contractABI: "",
               functions: [],
@@ -264,14 +247,12 @@ function CreateJobPage() {
         [jobType]: prevJobs[jobType].filter((id) => id !== jobId),
       };
 
-      // Re-index the remaining jobs
       if (updatedJobs[jobType]) {
         updatedJobs[jobType] = updatedJobs[jobType].map(
           (id, index) => index + 1
-        ); // Re-index from 1
+        );
       }
 
-      // If there are no linked jobs left for this jobType, remove the jobType entry
       if (updatedJobs[jobType]?.length === 0) {
         delete updatedJobs[jobType];
       }
@@ -290,27 +271,21 @@ function CreateJobPage() {
         .sort((a, b) => parseInt(a) - parseInt(b));
 
       if (jobIds.length === 0) {
-        return updatedDetails; // No linked jobs, nothing to do
+        return updatedDetails;
       }
 
-      // Find the last valid index
       const lastIndex = parseInt(jobIds[jobIds.length - 1]);
 
-      // Swap details
       const temp = updatedDetails[jobType][jobId];
       updatedDetails[jobType][jobId] = updatedDetails[jobType][lastIndex];
       updatedDetails[jobType][lastIndex] = temp;
 
-      // Now delete the last index
       delete updatedDetails[jobType][lastIndex];
 
-      // If there are no linked jobs left for this jobType, remove the jobType entry
       if (
         Object.keys(updatedDetails[jobType]).length === 1 &&
         updatedDetails[jobType]["main"] !== undefined
       ) {
-        //Only 'main' is left
-        // delete updatedDetails[jobType];
       }
 
       return updatedDetails;
@@ -337,7 +312,6 @@ function CreateJobPage() {
     setJobType,
     estimateFee,
     estimatedFee,
-    // setEstimatedFee,
     isLoading,
     setIsLoading,
     userBalance,
@@ -362,7 +336,6 @@ function CreateJobPage() {
     }));
   };
 
-  // Ensure jobType exists in contractDetails on jobType change
   useEffect(() => {
     setContractDetails((prevDetails) => ({
       ...prevDetails,
@@ -397,7 +370,7 @@ function CreateJobPage() {
           behavior: "smooth",
           block: "center",
         });
-      }, 100); // Small delay ensures it happens after state updates
+      }, 100);
 
       return;
     }
@@ -428,13 +401,11 @@ function CreateJobPage() {
       const allJobsDetails = [];
       const mainJobDetails = contractDetails[jobType]?.["main"];
 
-      // Deploy proxy for main job
       const { proxyAddress: mainProxyAddress } = await deployNewProxy(
         mainJobDetails.contractAddress,
         address
       );
 
-      // Calculate taskdefinitionid and argType based on job type and argument type
       const getTaskDefinitionId = (argumentType) => {
         return argumentType === "static"
           ? jobType === 1
@@ -451,7 +422,6 @@ function CreateJobPage() {
 
       const getArgType = (argumentType) => argumentType === "static" ? 0 : 1;
 
-      // Add main job details if available
       if (mainJobDetails) {
         const taskdefinitionid = getTaskDefinitionId(mainJobDetails.argumentType);
         const argType = getArgType(mainJobDetails.argumentType);
@@ -484,14 +454,12 @@ function CreateJobPage() {
         });
       }
 
-      // Collect details for linked jobs
       if (linkedJobs[jobType]) {
         for (const jobId of linkedJobs[jobType]) {
           const linkedJobDetails = contractDetails[jobType]?.[jobId];
 
           let linkedProxyAddress = mainProxyAddress;
           if(mainJobDetails.contractAddress !== linkedJobDetails.contractAddress){
-            // Deploy proxy for linked job
             const { proxyAddress: linkedProxyAddress } = await deployNewProxy(
               linkedJobDetails.contractAddress,
               address
@@ -541,54 +509,44 @@ function CreateJobPage() {
         resetProcessSteps();
         setShowProcessModal(true);
 
-        // Step 1: Update Database
         setProcessSteps((prev) =>
           prev.map((step) =>
             step.id === 1 ? { ...step, status: "pending" } : step
           )
         );
 
-        // Wait for 1.5 seconds to simulate database update
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
-        // Mark Database step as completed
         setProcessSteps((prev) =>
           prev.map((step) =>
             step.id === 1 ? { ...step, status: "completed" } : step
           )
         );
 
-        // Wait for 500ms before starting next step
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        // Step 2: Validate Job
         setProcessSteps((prev) =>
           prev.map((step) =>
             step.id === 2 ? { ...step, status: "pending" } : step
           )
         );
 
-        // Wait for 1.5 seconds to simulate validation
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
-        // Mark Validation step as completed
         setProcessSteps((prev) =>
           prev.map((step) =>
             step.id === 2 ? { ...step, status: "completed" } : step
           )
         );
 
-        // Wait for 500ms before starting next step
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        // Step 3: Calculate Fees
         setProcessSteps((prev) =>
           prev.map((step) =>
             step.id === 3 ? { ...step, status: "pending" } : step
           )
         );
 
-        // Ensure estimateFee is awaited properly
         await estimateFee(
           timeframeInSeconds,
           intervalInSeconds,
@@ -597,17 +555,14 @@ function CreateJobPage() {
           setProcessSteps
         );
 
-        // Ensure UI updates and animation completes
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        // Mark Fee Calculation step as completed only after actual calculation
         setProcessSteps((prev) =>
           prev.map((step) =>
             step.id === 3 ? { ...step, status: "completed" } : step
           )
         );
 
-        // await new Promise((resolve) => setTimeout(resolve, 1000));
         if (processSteps.every((step) => step.status === "completed")) {
           setIsModalOpen(true);
           setShowProcessModal(false);
@@ -661,18 +616,16 @@ function CreateJobPage() {
         className="mt-10"
         toastOptions={{
           style: {
-            background: "#0a0a0a", // Dark background
-            color: "#fff", // White text
+            background: "#0a0a0a",
+            color: "#fff",
             borderRadius: "8px",
             border: "1px gray solid",
           },
         }}
       />
 
-      {/* <ProcessModal isOpen={showProcessModal} steps={processSteps} /> */}
 
       <div className="min-h-screen text-white pt-10 md:pt-20 lg:pt-32 pb-20 mt-[5rem] lg:mt-[9rem] relative">
-        {/* Background gradients */}
         <div className="fixed inset-0  pointer-events-none" />
         <div className="fixed top-0 left-1/2 w-96 h-96 rounded-full blur-3xl -translate-x-1/2 pointer-events-none" />
 
@@ -682,11 +635,10 @@ function CreateJobPage() {
           <form
             ref={formRef}
             onSubmit={(e) => handleFormSubmit(e, jobType)}
-            onKeyDown={handleKeyDown} // Add the keydown handler to the entire form
+            onKeyDown={handleKeyDown}
             className="w-full lg:w-[80%] max-w-[1600px] mx-auto"
           >
             <div className="space-y-8">
-              {/* Job Type Selection */}
               <div className="bg-[#141414] backdrop-blur-xl rounded-2xl px-6 py-10 border border-white/10 hover:border-white/20 transition-all duration-300 space-y-8">
                 <label className="block text-sm sm:text-base font-medium text-gray-300 mb-6 text-nowrap">
                   Trigger Type
@@ -733,7 +685,6 @@ function CreateJobPage() {
               {jobType ? (
                 <>
                   <div className="bg-[#141414] backdrop-blur-xl rounded-2xl px-6 py-10 border border-white/10 hover:border-white/20 transition-all duration-300 space-y-8 relative z-50">
-                    {/* network */}
                     <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                       <label className="block text-sm sm:text-base font-medium text-gray-300 text-nowrap">
                         Network
@@ -1045,7 +996,7 @@ function CreateJobPage() {
                   {linkedJobs[jobType]?.length > 0 && (
                     <div className="space-y-8">
                       {linkedJobs[jobType].map((jobId) => {
-                        const jobKey = jobId; // The linked job ID
+                        const jobKey = jobId;
                         return (
                           <div
                             key={jobId}
@@ -1170,7 +1121,7 @@ function CreateJobPage() {
                     <button
                       type="submit"
                       className="relative bg-[#222222] text-[#000000] border border-[#222222] px-6 py-2 sm:px-8 sm:py-3 rounded-full group transition-transform"
-                      disabled={isLoading} // Disable while loading
+                      disabled={isLoading}
                     >
                       <span className="absolute inset-0 bg-[#222222] border border-[#FFFFFF80]/50 rounded-full scale-100 translate-y-0 transition-all duration-300 ease-out group-hover:translate-y-2"></span>
                       <span className="absolute inset-0 bg-[#F8FF7C] rounded-full scale-100 translate-y-0 group-hover:translate-y-0"></span>
@@ -1228,7 +1179,6 @@ function CreateJobPage() {
             </div>
           </form>
         </div>
-        {/* Estimated Fee Modal */}
         <EstimatedFeeModal
           isOpen={isLoading}
           showProcessing={showProcessModal}
@@ -1239,7 +1189,7 @@ function CreateJobPage() {
             setIsModalOpen(false);
             setIsLoading(false);
             setProcessSteps(false);
-            resetProcessSteps(); // Add this line
+            resetProcessSteps();
           }}
           estimatedFee={estimatedFee}
           onStake={() => {

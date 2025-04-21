@@ -8,13 +8,13 @@ if (typeof window !== "undefined") {
 const ProcessModal = ({ isOpen, steps, onClose }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const canvasRef = useRef(null);
-  const [character, setCharacter] = useState([{ x: 10, y: 10 }]); // Character instead of snake
+  const [character, setCharacter] = useState([{ x: 10, y: 10 }]);
   const [food, setFood] = useState({ x: 15, y: 15 });
   const [direction, setDirection] = useState("RIGHT");
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
-  const [frameIndex, setFrameIndex] = useState(0); // Track animation frame
+  const [frameIndex, setFrameIndex] = useState(0);
 
   const gridSize = 20;
   const tileSize = 30;
@@ -45,15 +45,13 @@ const ProcessModal = ({ isOpen, steps, onClose }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [gameOver, gameStarted]);
 
-  // Load character frames
   const characterFrames = [];
   for (let i = 1; i <= 10; i++) {
     const img = new Image();
-    img.src = `/character/frame${i}.png`; // Update with actual path
+    img.src = `/character/frame${i}.png`;
     characterFrames.push(img);
   }
 
-  // Load Ethereum token image
   const ethImage = new Image();
   ethImage.src =
     "https://upload.wikimedia.org/wikipedia/commons/0/05/Ethereum_logo_2014.svg";
@@ -83,7 +81,6 @@ const ProcessModal = ({ isOpen, steps, onClose }) => {
             break;
         }
 
-        // Check if character hits the boundary
         if (
           head.x < 0 ||
           head.x >= gridSize ||
@@ -96,7 +93,6 @@ const ProcessModal = ({ isOpen, steps, onClose }) => {
 
         newCharacter.unshift(head);
 
-        // Check for food collision
         if (head.x === food.x && head.y === food.y) {
           setFood({
             x: Math.floor(Math.random() * gridSize),
@@ -109,7 +105,6 @@ const ProcessModal = ({ isOpen, steps, onClose }) => {
 
         return newCharacter;
       });
-      // Update frame for animation
       setFrameIndex((prev) => (prev + 1) % 10);
     };
 
@@ -128,7 +123,6 @@ const ProcessModal = ({ isOpen, steps, onClose }) => {
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-   // Draw Character
    const currentFrame = characterFrames[frameIndex];
    character.forEach((segment) => {
      ctx.drawImage(
@@ -140,7 +134,6 @@ const ProcessModal = ({ isOpen, steps, onClose }) => {
      );
    });
 
-   // Draw Ethereum token
    ctx.drawImage(ethImage, food.x * tileSize, food.y * tileSize, tileSize, tileSize);
 
    if (!gameStarted) {

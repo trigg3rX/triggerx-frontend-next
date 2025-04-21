@@ -8,7 +8,6 @@ export const TimeIntervalInputs = forwardRef(
           Time Interval
         </label>
 
-        {/* Error message near heading */}
         {error && (
           <div ref={errorRef} className="text-red-500 text-xs sm:text-sm mb-4">
             {error}

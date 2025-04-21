@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React from "react";
 import Image from "next/image";
 import logo from "../../assets/footerLogo.svg";
 import footer1 from "../../assets/footer1.svg";

@@ -7,7 +7,6 @@ export const TimeframeInputs = forwardRef(({ timeframe, onTimeframeChange, error
         Timeframe
       </label>
 
-      {/* Error message near heading */}
       {error && (
         <div ref={errorRef} className="text-red-500 text-xs sm:text-sm mb-4">
           {error}

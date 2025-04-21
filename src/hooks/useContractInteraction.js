@@ -14,10 +14,10 @@ export function useContractInteraction(jobType) {
   const [argsArray, setArgArray] = useState([]);
   const [argumentType, setArgumentType] = useState("static");
 
-  const [events, setEvents] = useState([]); // Added for events
-  const [selectedEvent, setSelectedEvent] = useState(null); // Added for events
-  const [targetEvent, setTargetEvent] = useState(""); // Added for event selection
-  const [eventInputs, setEventInputs] = useState([]); // Added for event parameters
+  const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [targetEvent, setTargetEvent] = useState("");
+  const [eventInputs, setEventInputs] = useState([]);
 
   function extractFunctions(abi) {
     try {
@@ -59,7 +59,6 @@ export function useContractInteraction(jobType) {
     }
   }
 
-  // New function to extract events from ABI
   function extractEvents(abi) {
     try {
       let abiArray;
@@ -147,7 +146,6 @@ export function useContractInteraction(jobType) {
     );
     setSelectedFunction(func);
 
-    // Reset argument type if function has no inputs
     if (!func?.inputs?.length) {
       setArgumentType("static");
     }
@@ -161,7 +159,6 @@ export function useContractInteraction(jobType) {
     }
   };
 
-  // New handler for event selection
   const handleEventChange = (e) => {
     const selectedValue = e.target.value;
     console.log("Event selection changed to:", selectedValue);
@@ -186,7 +183,6 @@ export function useContractInteraction(jobType) {
     console.log("Argument type changed to:", newType);
     setArgumentType(newType);
 
-    // Clear inputs when switching to dynamic
     if (newType === "dynamic") {
       const emptyInputs = selectedFunction?.inputs?.map(() => "") || [];
       setFunctionInputs(emptyInputs);
@@ -212,14 +208,12 @@ export function useContractInteraction(jobType) {
     }
   };
 
-  // New handler for event input changes
   const handleEventInputChange = (index, value) => {
     const newInputs = [...eventInputs];
     newInputs[index] = value;
     setEventInputs(newInputs);
   };
 
-  // Function to emit an event (for testing or simulation purposes)
   const emitEvent = async (provider) => {
     if (!selectedEvent || !contractAddress || !contractABI) {
       console.error("Missing event details, contract address, or ABI");
@@ -233,25 +227,19 @@ export function useContractInteraction(jobType) {
         provider
       );
 
-      // Create a filter for the event
       const filter = contract.filters[selectedEvent.name]();
 
-      // Return a function that allows subscribing to the event
       return {
         subscribe: (callback) => {
-          // Listen for the event
           contract.on(filter, (...args) => {
-            // The last argument is the event object
             const event = args[args.length - 1];
             callback(event);
           });
 
-          // Return a function to unsubscribe
           return () => {
             contract.removeAllListeners(filter);
           };
         },
-        // Get past events
         getPastEvents: async (fromBlock = 0, toBlock = "latest") => {
           const events = await contract.queryFilter(filter, fromBlock, toBlock);
           return events;
@@ -284,22 +272,22 @@ export function useContractInteraction(jobType) {
     contractAddress,
     contractABI,
     functions,
-    events, // Added
+    events,
     targetFunction,
-    targetEvent, // Added
+    targetEvent,
     selectedFunction,
-    selectedEvent, // Added
+    selectedEvent,
     functionInputs,
-    eventInputs, // Added
+    eventInputs,
     argumentsInBytes,
     argsArray,
     argumentType,
     handleContractAddressChange,
     handleFunctionChange,
-    handleEventChange, // Added
+    handleEventChange,
     handleInputChange,
-    handleEventInputChange, // Added
+    handleEventInputChange,
     handleArgumentTypeChange,
-    emitEvent, // Added
+    emitEvent,
   };
 }

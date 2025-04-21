@@ -79,7 +79,6 @@ const config = getDefaultConfig({
   ssr: true,
 });
 
-// Create a client
 const queryClient = new QueryClient();
 
 export function Providers({ children }) {

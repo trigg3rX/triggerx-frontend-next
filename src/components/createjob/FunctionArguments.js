@@ -1,4 +1,3 @@
-//FunctionArguments.js
 export function FunctionArguments({
   selectedFunction,
   functionInputs,

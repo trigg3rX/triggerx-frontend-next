@@ -9,7 +9,6 @@ import { PortableText } from "@portabletext/react";
 import Layout from "../../../components/layout/Layout";
 import DevHubItemLoading from "./loading";
 
-// --- Sanity Image URL Builder Setup ---
 const builder = imageUrlBuilder(sanityClient);
 function urlFor(source) {
   if (source?.asset) {
@@ -65,7 +64,7 @@ function DevhubItem() {
         console.log("data", data);
 
         if (data) {
-          setPostData(data); // Store fetched data in state
+          setPostData(data);
         } else {
           setError("Post not found.");
         }
@@ -73,7 +72,7 @@ function DevhubItem() {
         console.error("Error fetching post from Sanity:", err);
         setError("Failed to load post data.");
       } finally {
-        setIsLoading(false); // Ensure loading is set to false
+        setIsLoading(false);
       }
     }
 
@@ -82,7 +81,7 @@ function DevhubItem() {
 
   useEffect(() => {
     if (!postData || isLoading || error) {
-      return; // Don't run if no data, loading, or error
+      return;
     }
 
     const handleScroll = () => {
@@ -92,11 +91,10 @@ function DevhubItem() {
       for (let i = 0; i < headings.length; i++) {
         const rect = headings[i].getBoundingClientRect();
 
-        // If heading is above 120px, set it as active
         if (rect.top <= 250) {
           currentActive = headings[i].innerText;
         } else {
-          break; // Stop checking further, as the next heading hasn't reached 120px yet
+          break;
         }
       }
       setActiveHeading(currentActive);
@@ -126,18 +124,11 @@ function DevhubItem() {
     );
   }
 
-  // --- Get Image URL Safely ---
   const headerImageUrl = urlFor(postData.image)
     ?.width(1200)
     .auto("format")
     .url();
 
-  // --- Format Read Time (Example: assuming postData.readTime is minutes) ---
-  const readTimeDisplay = postData.readTime
-    ? `${postData.readTime} MINUTES`
-    : "N/A";
-
-  // ButtonLink Component
   const ButtonLink = ({ value }) => {
     if (!value?.url || !value?.text) {
       return null;
@@ -158,7 +149,6 @@ function DevhubItem() {
     );
   };
 
-  // Disclaimer Component
   const Disclaimer = ({ value }) => {
     if (!value?.text) {
       return null;
@@ -178,7 +168,6 @@ function DevhubItem() {
     );
   };
 
-  // StepsAccordion Component (with internal state for toggling)
   const StepsAccordion = ({ value }) => {
     const [openSteps, setOpenSteps] = React.useState({});
 
@@ -341,7 +330,7 @@ function DevhubItem() {
                           pair.h2Heading
                         );
                         if (targetElement) {
-                          const yOffset = -160; // Adjust the offset (200px from top)
+                          const yOffset = -160;
                           const y =
                             targetElement.getBoundingClientRect().top +
                             window.scrollY +
@@ -377,7 +366,7 @@ function DevhubItem() {
                       pair.h2Heading
                     );
                     if (targetElement) {
-                      const yOffset = -160; // Adjust the offset (200px from top)
+                      const yOffset = -160;
                       const y =
                         targetElement.getBoundingClientRect().top +
                         window.scrollY +
@@ -465,7 +454,7 @@ function DevhubItem() {
               },
               block: {
                 h2: ({ children }) => {
-                  const text = children?.[0]; // Extract text from children array
+                  const text = children?.[0];
                   return (
                     <h2
                       id={text}

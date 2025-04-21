@@ -63,7 +63,6 @@ function Devhub() {
     return <DevHubLoading />;
   }
 
-  // Use the error state to display an error message
   if (error) {
     console.error("Rendering error state:", error);
     return (
@@ -74,7 +73,6 @@ function Devhub() {
     );
   }
 
-  // Handle the case where the fetch was successful but returned no posts
   if (!isLoading && posts.length === 0) {
     return <div>No dev posts found.</div>;
   }

@@ -7,7 +7,6 @@ export default function DevHubLoading() {
           <div className="h-8 bg-gray-700 rounded w-60 mb-6"></div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Generate multiple skeleton cards */}
             {Array(6).fill(null).map((_, index) => (
               <div key={index} className="bg-[#1A1A1A] rounded-lg p-5 border border-[#2A2A2A]">
                 <div className="h-6 bg-gray-700 rounded w-3/4 mb-4"></div>

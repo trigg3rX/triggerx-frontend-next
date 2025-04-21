@@ -1,12 +1,10 @@
 import React from "react";
 
 const DashboardSkeleton = () => {
-  // Create an array of 5 items for skeleton rows
   const skeletonRows = Array(5).fill(null);
 
   return (
     <div className="animate-pulse">
-      {/* Main table skeleton */}
       <div className="bg-[#141414] backdrop-blur-xl rounded-2xl p-8">
         <div className="h-8 bg-gray-700 rounded w-60 mb-6"></div>
         <div className="overflow-x-auto">
