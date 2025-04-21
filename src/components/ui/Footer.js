@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import logo from "../../assets/footerLogo.svg";
-import footer1 from "../../assets/footer1.svg";
-import footer2 from "../../assets/footer2.svg";
-import { Tooltip } from "antd";
+import React from 'react';
+import Image from 'next/image';
+import logo from '../../assets/footerLogo.svg';
+import footer1 from '../../assets/footer1.svg';
+import footer2 from '../../assets/footer2.svg';
+import { Tooltip } from 'antd';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -16,9 +16,7 @@ const Footer = () => {
         <div className="flex mt-20 flex-col-reverse sm:flex-row items-start sm:items-end justify-between gap-10 sm:gap-5 w-[70%] mx-auto">
           <div className="flex flex-col gap-4 sm:gap-4">
             <div className="flex space-x-4 items-center">
-              <Tooltip
-                title="Github"
-                styles={{ body: { background: "#141414" } }}              >
+              <Tooltip title="Github" styles={{ body: { background: '#141414' } }}>
                 <a
                   href="https://github.com/trigg3rX"
                   className="hover:text-gray-300"
@@ -40,9 +38,7 @@ const Footer = () => {
                   </svg>
                 </a>
               </Tooltip>
-              <Tooltip
-                title="Twitter"
-                styles={{ body: { background: "#141414" } }}              >
+              <Tooltip title="Twitter" styles={{ body: { background: '#141414' } }}>
                 <a
                   href="https://x.com/TriggerXnetwork"
                   className="hover:text-gray-300"
@@ -64,9 +60,7 @@ const Footer = () => {
                   </svg>
                 </a>
               </Tooltip>
-              <Tooltip
-                title="Telegram"
-                styles={{ body: { background: "#141414" } }}              >
+              <Tooltip title="Telegram" styles={{ body: { background: '#141414' } }}>
                 <a
                   href="https://t.me/triggerxnetwork"
                   className="hover:text-gray-300"
@@ -89,16 +83,14 @@ const Footer = () => {
                 </a>
               </Tooltip>
 
-              <Tooltip
-                title="Gitbook"
-                styles={{ body: { background: "#141414" } }}              >
+              <Tooltip title="Gitbook" styles={{ body: { background: '#141414' } }}>
                 <a
                   href="https://triggerx.gitbook.io/triggerx-docs"
                   className="hover:text-gray-300"
                   target="blank"
                 >
                   <div className="border border-white rounded-full hover:bg-white ">
-                    {" "}
+                    {' '}
                     <svg
                       width="42"
                       height="42"
@@ -118,9 +110,7 @@ const Footer = () => {
                   </div>
                 </a>
               </Tooltip>
-              <Tooltip
-                title="Mirror"
-                styles={{ body: { background: "#141414" } }}              >
+              <Tooltip title="Mirror" styles={{ body: { background: '#141414' } }}>
                 <a
                   href="https://mirror.xyz/0x0255F7A175f73a05765719c165445F63155aF8E9"
                   className="hover:text-gray-300"
@@ -128,7 +118,7 @@ const Footer = () => {
                   target="blank"
                 >
                   <div className="border border-white rounded-full group hover:bg-white p-2">
-                    {" "}
+                    {' '}
                     <svg
                       width="20"
                       height="22"
@@ -146,9 +136,7 @@ const Footer = () => {
                   </div>
                 </a>
               </Tooltip>
-              <Tooltip
-                title="Medium"
-                styles={{ body: { background: "#141414" } }}              >
+              <Tooltip title="Medium" styles={{ body: { background: '#141414' } }}>
                 <a
                   href="https://medium.com/@triggerx"
                   className="hover:text-gray-300"
@@ -193,11 +181,7 @@ const Footer = () => {
               >
                 Docs
               </a>
-              <a
-                href="https://t.me/triggerxnetwork"
-                className="hover:text-gray-400"
-                target="blank"
-              >
+              <a href="https://t.me/triggerxnetwork" className="hover:text-gray-400" target="blank">
                 Dev Hub
               </a>
             </div>
@@ -220,7 +204,14 @@ const Footer = () => {
         </div>
 
         <div className="w-[95%] mx-auto h-max p-5">
-          <Image src={logo} alt="footer logo" className="w-full h-auto" width={1000} height={200} priority />
+          <Image
+            src={logo}
+            alt="footer logo"
+            className="w-full h-auto"
+            width={1000}
+            height={200}
+            priority
+          />
         </div>
 
         <Image

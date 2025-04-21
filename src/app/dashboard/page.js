@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useRef } from "react";
-import { Toaster, toast } from "react-hot-toast";
-import { ethers } from "ethers";
-import { useRouter } from "next/navigation";
-import { useStakeRegistry } from "../../hooks/useStakeRegistry";
-import WalletModal from "../../components/ui/WalletModal";
-import DashboardSkeleton from "../../components/dashboard/DasboardSkeleton";
-import { Tooltip } from "antd";
-import { useBalance, useAccount } from "wagmi";
-import loader from "../../assets/load.gif";
-import Link from "next/link";
-import Layout from "@/components/layout/Layout";
-import Head from "next/head";
-import DashboardLoading from "./loading";
+import React, { useState, useEffect, useRef } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
+import { ethers } from 'ethers';
+import { useRouter } from 'next/navigation';
+import { useStakeRegistry } from '../../hooks/useStakeRegistry';
+import WalletModal from '../../components/ui/WalletModal';
+import DashboardSkeleton from '../../components/dashboard/DasboardSkeleton';
+import { Tooltip } from 'antd';
+import { useBalance, useAccount } from 'wagmi';
+import loader from '../../assets/load.gif';
+import Link from 'next/link';
+import Layout from '@/components/layout/Layout';
+import Head from 'next/head';
+import DashboardLoading from './loading';
 
 function DashboardPage() {
   const [jobs, setJobs] = useState([]);
@@ -27,7 +27,7 @@ function DashboardPage() {
   const [expandedJobs, setExpandedJobs] = useState({});
   const [tgBalance, setTgBalance] = useState(0);
   const [stakeModalVisible, setStakeModalVisible] = useState(false);
-  const [stakeAmount, setStakeAmount] = useState("");
+  const [stakeAmount, setStakeAmount] = useState('');
   const [isWalletInstalled, setIsWalletInstalled] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [provider, setProvider] = useState(null);
@@ -39,8 +39,8 @@ function DashboardPage() {
   });
   const data = new Array(15).fill({
     id: 1,
-    type: "Condition-based",
-    status: "Active",
+    type: 'Condition-based',
+    status: 'Active',
   });
 
   const toggleJobExpand = (jobId) => {
@@ -53,7 +53,7 @@ function DashboardPage() {
   const outsideClick = (e) => {
     if (modelRef.current && !modelRef.current.contains(e.target)) {
       setStakeModalVisible(false);
-      setStakeAmount("");
+      setStakeAmount('');
     }
   };
 
@@ -61,7 +61,7 @@ function DashboardPage() {
 
   useEffect(() => {
     const initializeProvider = async () => {
-      if (typeof window.ethereum !== "undefined") {
+      if (typeof window.ethereum !== 'undefined') {
         const ethProvider = new ethers.BrowserProvider(window.ethereum);
         setProvider(ethProvider);
         setIsWalletInstalled(true);
@@ -74,14 +74,14 @@ function DashboardPage() {
     initializeProvider();
 
     if (window.ethereum) {
-      window.ethereum.on("accountsChanged", initializeProvider);
-      window.ethereum.on("chainChanged", initializeProvider);
+      window.ethereum.on('accountsChanged', initializeProvider);
+      window.ethereum.on('chainChanged', initializeProvider);
     }
 
     return () => {
       if (window.ethereum) {
-        window.ethereum.removeListener("accountsChanged", initializeProvider);
-        window.ethereum.removeListener("chainChanged", initializeProvider);
+        window.ethereum.removeListener('accountsChanged', initializeProvider);
+        window.ethereum.removeListener('chainChanged', initializeProvider);
       }
     };
   }, []);
@@ -95,13 +95,13 @@ function DashboardPage() {
   useEffect(() => {
     const logo = logoRef.current;
     if (logo) {
-      logo.style.transform = "rotateY(0deg)";
-      logo.style.transition = "transform 1s ease-in-out";
+      logo.style.transform = 'rotateY(0deg)';
+      logo.style.transition = 'transform 1s ease-in-out';
 
       const rotateLogo = () => {
-        logo.style.transform = "rotateY(360deg)";
+        logo.style.transform = 'rotateY(360deg)';
         setTimeout(() => {
-          logo.style.transform = "rotateY(0deg)";
+          logo.style.transform = 'rotateY(0deg)';
         }, 1000);
       };
 
@@ -116,18 +116,12 @@ function DashboardPage() {
 
   const getJobCreatorContract = async () => {
     if (!provider) {
-      throw new Error("Web3 provider not initialized");
+      throw new Error('Web3 provider not initialized');
     }
     const signer = await provider.getSigner();
-    const jobCreatorContractAddress =
-      "0x98a170b9b24aD4f42B6B3630A54517fd7Ff3Ac6d";
-    const jobCreatorABI = [
-    ];
-    return new ethers.Contract(
-      jobCreatorContractAddress,
-      jobCreatorABI,
-      signer
-    );
+    const jobCreatorContractAddress = '0x98a170b9b24aD4f42B6B3630A54517fd7Ff3Ac6d';
+    const jobCreatorABI = [];
+    return new ethers.Contract(jobCreatorContractAddress, jobCreatorABI, signer);
   };
 
   const fetchJobDetails = async () => {
@@ -140,15 +134,13 @@ function DashboardPage() {
       const userAddress = await signer.getAddress();
       const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-      const response = await fetch(
-        `${API_BASE_URL}/api/jobs/user/${userAddress}`
-      );
+      const response = await fetch(`${API_BASE_URL}/api/jobs/user/${userAddress}`);
       if (!response.ok) {
-        throw new Error("Failed to fetch job details from the database");
+        throw new Error('Failed to fetch job details from the database');
       }
 
       const jobsData = await response.json();
-      console.log("Fetched jobs data:", jobsData);
+      console.log('Fetched jobs data:', jobsData);
 
       const jobMap = {};
       jobsData.forEach((job) => {
@@ -175,25 +167,23 @@ function DashboardPage() {
       });
 
       const tempJobs = jobsData
-        .filter(
-          (jobDetail) => jobDetail.chain_status === 0 && !jobDetail.status
-        )
+        .filter((jobDetail) => jobDetail.chain_status === 0 && !jobDetail.status)
         .map((jobDetail) => ({
           id: jobDetail.job_id,
           type: mapJobType(jobDetail.job_type),
-          status: "Active",
+          status: 'Active',
           linkedJobs: linkedJobsMap[jobDetail.job_id] || [],
         }));
 
       setJobDetails(tempJobs);
       if (tempJobs.length === 0 && connected && !loading) {
-        toast("No jobs found. Create a new job to get started!", {
-          icon: "ℹ️",
+        toast('No jobs found. Create a new job to get started!', {
+          icon: 'ℹ️',
         });
       }
     } catch (error) {
-      if (connected && error.message !== "Failed to fetch") {
-        toast.error("Failed to fetch jobs. Please try again later.");
+      if (connected && error.message !== 'Failed to fetch') {
+        toast.error('Failed to fetch jobs. Please try again later.');
       }
     } finally {
       setLoading(false);
@@ -204,20 +194,20 @@ function DashboardPage() {
     const typeId = String(jobTypeId);
 
     switch (typeId) {
-      case "1":
-        return "Time-based";
-      case "2":
-        return "Time-based";
-      case "3":
-        return "Event-based";
-      case "4":
-        return "Event-based";
-      case "5":
-        return "Condition-based";
-      case "6":
-        return "Condition-based";
+      case '1':
+        return 'Time-based';
+      case '2':
+        return 'Time-based';
+      case '3':
+        return 'Event-based';
+      case '4':
+        return 'Event-based';
+      case '5':
+        return 'Condition-based';
+      case '6':
+        return 'Condition-based';
       default:
-        return "Unknown";
+        return 'Unknown';
     }
   };
 
@@ -235,14 +225,11 @@ function DashboardPage() {
       }
     };
 
-    window.ethereum.on("accountsChanged", handleAccountsChanged);
+    window.ethereum.on('accountsChanged', handleAccountsChanged);
 
     return () => {
       if (window.ethereum) {
-        window.ethereum.removeListener(
-          "accountsChanged",
-          handleAccountsChanged
-        );
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
       }
     };
   }, [provider]);
@@ -250,22 +237,22 @@ function DashboardPage() {
   useEffect(() => {
     const checkConnection = async () => {
       if (!window.ethereum) {
-        toast.error("Please install MetaMask to use this application!");
+        toast.error('Please install MetaMask to use this application!');
         setConnected(false);
         return;
       }
 
       try {
         const accounts = await window.ethereum.request({
-          method: "eth_accounts",
+          method: 'eth_accounts',
         });
         if (accounts.length === 0) {
           toast.dismiss();
-          toast.error("Please connect your wallet to continue!");
+          toast.error('Please connect your wallet to continue!');
         }
         setConnected(accounts.length > 0);
       } catch (error) {
-        toast.error("Failed to check wallet connection!");
+        toast.error('Failed to check wallet connection!');
         setConnected(false);
       }
     };
@@ -276,9 +263,7 @@ function DashboardPage() {
   const handleUpdateJob = (id) => {
     setJobs(
       jobs.map((job) =>
-        job.id === id
-          ? { ...job, status: job.status === "Active" ? "Paused" : "Active" }
-          : job
+        job.id === id ? { ...job, status: job.status === 'Active' ? 'Paused' : 'Active' } : job
       )
     );
   };
@@ -288,18 +273,18 @@ function DashboardPage() {
       const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
       const response = await fetch(`${API_BASE_URL}/api/jobs/delete/${jobId}`, {
-        method: "PUT",
+        method: 'PUT',
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete job from the database");
+        throw new Error('Failed to delete job from the database');
       }
 
-      toast.success("Job deleted successfully");
+      toast.success('Job deleted successfully');
 
       await fetchJobDetails();
     } catch (error) {
-      toast.error("Failed to delete job");
+      toast.error('Failed to delete job');
     }
   };
 
@@ -330,11 +315,11 @@ function DashboardPage() {
         selectedJob.timeInterval.seconds;
 
       const argType =
-        selectedJob.argType === "None"
+        selectedJob.argType === 'None'
           ? 0
-          : selectedJob.argType === "Static"
+          : selectedJob.argType === 'Static'
             ? 1
-            : selectedJob.argType === "Dynamic"
+            : selectedJob.argType === 'Dynamic'
               ? 2
               : 0;
 
@@ -350,12 +335,12 @@ function DashboardPage() {
         selectedJob.apiEndpoint
       );
 
-      toast.success("Job updated successfully");
+      toast.success('Job updated successfully');
 
       await fetchJobDetails();
       handleCloseModal();
     } catch (error) {
-      toast.error("Error updating job");
+      toast.error('Error updating job');
     }
   };
 
@@ -380,8 +365,7 @@ function DashboardPage() {
     });
   };
 
-  const { stakeRegistryAddress, stakeRegistryImplAddress, stakeRegistryABI } =
-    useStakeRegistry();
+  const { stakeRegistryAddress, stakeRegistryImplAddress, stakeRegistryABI } = useStakeRegistry();
 
   const fetchTGBalance = async () => {
     if (!provider || !isWalletInstalled) {
@@ -394,14 +378,13 @@ function DashboardPage() {
 
       const stakeRegistryContract = new ethers.Contract(
         stakeRegistryAddress,
-        ["function getStake(address) view returns (uint256, uint256)"], // Assuming getStake returns (TG balance, other value)
+        ['function getStake(address) view returns (uint256, uint256)'], // Assuming getStake returns (TG balance, other value)
         provider
       );
 
       const [_, tgBalance] = await stakeRegistryContract.getStake(userAddress);
       setTgBalance(ethers.formatEther(tgBalance));
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -417,56 +400,55 @@ function DashboardPage() {
     try {
       setIsStaking(true);
       if (!isWalletInstalled) {
-        throw new Error("Web3 wallet is not installed.");
+        throw new Error('Web3 wallet is not installed.');
       }
 
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const stakingContract = new ethers.Contract(
         stakeRegistryAddress,
-        ["function stake(uint256 amount) external payable returns (uint256)"],
+        ['function stake(uint256 amount) external payable returns (uint256)'],
         signer
       );
 
       const stakeAmountInWei = ethers.parseEther(stakeAmount.toString());
 
       if (stakeAmountInWei === 0n) {
-        throw new Error("Stake amount must be greater than zero.");
+        throw new Error('Stake amount must be greater than zero.');
       }
 
-      const tx = await stakingContract.stake(
-        ethers.parseEther(stakeAmount.toString()),
-        { value: ethers.parseEther(stakeAmount.toString()) }
-      );
+      const tx = await stakingContract.stake(ethers.parseEther(stakeAmount.toString()), {
+        value: ethers.parseEther(stakeAmount.toString()),
+      });
       await tx.wait();
 
-      toast.success("Staking successful!");
+      toast.success('Staking successful!');
       fetchTGBalance();
       setStakeModalVisible(false);
-      setStakeAmount("");
+      setStakeAmount('');
     } catch (error) {
-      toast.error("Staking failed ");
+      toast.error('Staking failed ');
       setStakeModalVisible(false);
-      setStakeAmount("");
+      setStakeAmount('');
     } finally {
       setIsStaking(false);
     }
   };
 
   useEffect(() => {
-    if (typeof window.ethereum === "undefined") {
+    if (typeof window.ethereum === 'undefined') {
       setIsWalletInstalled(false);
       setShowModal(true);
     }
   }, []);
 
   const formatBalance = (balance) => {
-    if (!balance) return "0";
+    if (!balance) return '0';
     const num = parseFloat(balance);
     if (num >= 1000000) {
-      return (num / 1000000).toFixed(4) + "M";
+      return (num / 1000000).toFixed(4) + 'M';
     } else if (num >= 1000) {
-      return (num / 1000).toFixed(4) + "K";
+      return (num / 1000).toFixed(4) + 'K';
     }
     return num.toFixed(4);
   };
@@ -493,10 +475,10 @@ function DashboardPage() {
         className="mt-10"
         toastOptions={{
           style: {
-            background: "#0a0a0a",
-            color: "#fff",
-            borderRadius: "8px",
-            border: "1px gray solid",
+            background: '#0a0a0a',
+            color: '#fff',
+            borderRadius: '8px',
+            border: '1px gray solid',
           },
         }}
       />
@@ -519,8 +501,8 @@ function DashboardPage() {
                       <div
                         className="max-h-[650px] overflow-y-auto"
                         style={{
-                          scrollbarWidth: "none",
-                          msOverflowStyle: "none",
+                          scrollbarWidth: 'none',
+                          msOverflowStyle: 'none',
                         }}
                       >
                         <table className="w-full border-separate border-spacing-y-4 ">
@@ -545,7 +527,7 @@ function DashboardPage() {
                               <React.Fragment>
                                 <tr key={job.id} className="  ">
                                   <td className="px-5 py-5 text-[#A2A2A2] md:text-md lg:text-lg xs:text-[12px] text-center border border-r-0 border-[#2A2A2A] rounded-tl-lg rounded-bl-lg bg-[#1A1A1A]">
-                                    {index + 1}{" "}
+                                    {index + 1}{' '}
                                   </td>
                                   <td className="bg-[#1A1A1A] px-6 py-5 text-[#A2A2A2] md:text-md lg:text-lg xs:text-[12px] border border-l-0 border-r-0 border-[#2A2A2A]">
                                     {job.type}
@@ -572,13 +554,10 @@ function DashboardPage() {
                                     </div>
                                     {job.linkedJobs &&
                                       job.linkedJobs.some(
-                                        (linkedJob) =>
-                                          linkedJob.chain_status === 1
+                                        (linkedJob) => linkedJob.chain_status === 1
                                       ) && (
                                         <div
-                                          onClick={() =>
-                                            toggleJobExpand(job.id)
-                                          }
+                                          onClick={() => toggleJobExpand(job.id)}
                                           className="flex items-center justify-between cursor-pointer px-3 py-2 rounded-lg"
                                         >
                                           <svg
@@ -592,9 +571,7 @@ function DashboardPage() {
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
                                             className={`transition-transform duration-300 ${
-                                              expandedJobs[job.id]
-                                                ? "rotate-180"
-                                                : ""
+                                              expandedJobs[job.id] ? 'rotate-180' : ''
                                             }`}
                                           >
                                             <path d="m6 9 6 6 6-6" />
@@ -609,9 +586,7 @@ function DashboardPage() {
                                     <tr>
                                       <td colSpan="4" className="">
                                         <div className="bg-[#1A1A1A] rounded-lg p-4">
-                                          <h4 className="text-white font-bold mb-4">
-                                            Linked Jobs
-                                          </h4>
+                                          <h4 className="text-white font-bold mb-4">Linked Jobs</h4>
                                           <table className="w-full border-separate border-spacing-y-4 ">
                                             <thead className=" bg-[#2A2A2A]">
                                               <tr>
@@ -630,48 +605,35 @@ function DashboardPage() {
                                               </tr>
                                             </thead>
                                             <tbody>
-                                              {job.linkedJobs.map(
-                                                (linkedJob, index) => (
-                                                  <tr
-                                                    key={job.id}
-                                                    className="  "
-                                                  >
-                                                    <td className="px-5 py-5 text-[#A2A2A2] md:text-md lg:text-lg xs:text-[12px] text-center border border-r-0 border-[#2A2A2A] rounded-tl-lg rounded-bl-lg bg-[#1A1A1A]">
-                                                      {index + 1}
-                                                    </td>
-                                                    <td className="bg-[#1A1A1A] px-6 py-5 text-[#A2A2A2] md:text-md lg:text-lg xs:text-[12px] border border-l-0 border-r-0 border-[#2A2A2A]">
-                                                      {mapJobType(
-                                                        linkedJob.job_type
-                                                      )}
-                                                    </td>
-                                                    <td className="bg-[#1A1A1A] px-6 py-5 text-[#A2A2A2] border border-l-0 border-[#2A2A2A] border-r-0">
-                                                      <span className="px-4 py-2 rounded-full text-[15px] border-[#5047FF] text-[#C1BEFF] border bg-[#5047FF1A]/10 md:text-md xs:text-[12px]">
-                                                        {linkedJob.status
-                                                          ? "InActive"
-                                                          : "Active"}
-                                                      </span>
-                                                    </td>
-                                                    <td className="bg-[#1A1A1A] px-6 py-5 space-x-2 text-white flex flex-row border border-l-0 border-[#2A2A2A] rounded-tr-lg rounded-br-lg">
-                                                      <button
-                                                        disabled
-                                                        className="px-4 py-2 bg-[#C07AF6] rounded-lg text-sm text-white cursor-not-allowed"
-                                                      >
-                                                        Update
-                                                      </button>
-                                                      <button
-                                                        onClick={() =>
-                                                          handleDeleteJob(
-                                                            job.id
-                                                          )
-                                                        }
-                                                        className="px-4 py-2 bg-[#FF5757] rounded-lg text-sm text-white"
-                                                      >
-                                                        Delete
-                                                      </button>
-                                                    </td>
-                                                  </tr>
-                                                )
-                                              )}
+                                              {job.linkedJobs.map((linkedJob, index) => (
+                                                <tr key={job.id} className="  ">
+                                                  <td className="px-5 py-5 text-[#A2A2A2] md:text-md lg:text-lg xs:text-[12px] text-center border border-r-0 border-[#2A2A2A] rounded-tl-lg rounded-bl-lg bg-[#1A1A1A]">
+                                                    {index + 1}
+                                                  </td>
+                                                  <td className="bg-[#1A1A1A] px-6 py-5 text-[#A2A2A2] md:text-md lg:text-lg xs:text-[12px] border border-l-0 border-r-0 border-[#2A2A2A]">
+                                                    {mapJobType(linkedJob.job_type)}
+                                                  </td>
+                                                  <td className="bg-[#1A1A1A] px-6 py-5 text-[#A2A2A2] border border-l-0 border-[#2A2A2A] border-r-0">
+                                                    <span className="px-4 py-2 rounded-full text-[15px] border-[#5047FF] text-[#C1BEFF] border bg-[#5047FF1A]/10 md:text-md xs:text-[12px]">
+                                                      {linkedJob.status ? 'InActive' : 'Active'}
+                                                    </span>
+                                                  </td>
+                                                  <td className="bg-[#1A1A1A] px-6 py-5 space-x-2 text-white flex flex-row border border-l-0 border-[#2A2A2A] rounded-tr-lg rounded-br-lg">
+                                                    <button
+                                                      disabled
+                                                      className="px-4 py-2 bg-[#C07AF6] rounded-lg text-sm text-white cursor-not-allowed"
+                                                    >
+                                                      Update
+                                                    </button>
+                                                    <button
+                                                      onClick={() => handleDeleteJob(job.id)}
+                                                      className="px-4 py-2 bg-[#FF5757] rounded-lg text-sm text-white"
+                                                    >
+                                                      Delete
+                                                    </button>
+                                                  </td>
+                                                </tr>
+                                              ))}
                                             </tbody>
                                           </table>
                                         </div>
@@ -686,8 +648,7 @@ function DashboardPage() {
                     </div>
                   ) : (
                     <h4 className="text-center py-8 text-[#A2A2A2] flex items-center h-[650px] justify-center">
-                      No active jobs found. Create your first job to get
-                      started.
+                      No active jobs found. Create your first job to get started.
                     </h4>
                   )}
                 </div>
@@ -705,9 +666,7 @@ function DashboardPage() {
                 </div>
               ) : (
                 <div className="bg-[#1C1C1C] backdrop-blur-xl rounded-2xl p-8 ">
-                  <h3 className="xl:text-2xl text-lg font-bold mb-6  text-white">
-                    Your Balance
-                  </h3>
+                  <h3 className="xl:text-2xl text-lg font-bold mb-6  text-white">Your Balance</h3>
                   <div className="p-6 bg-[#242323] rounded-lg ">
                     <p className="text-[#A2A2A2] xl:text-md text-sm mb-7 font-bold tracking-wider">
                       Total TG Balance
@@ -788,10 +747,7 @@ function DashboardPage() {
                       </div>
                       <div className="flex justify-start items-center gap-7">
                         <p className="font-semibold text-[#A2A2A2] bg-[#242323] py-3 px-4 rounded-md">
-                          {
-                            jobDetails.filter((job) => job.status === "Active")
-                              .length
-                          }
+                          {jobDetails.filter((job) => job.status === 'Active').length}
                         </p>
                         <p className="text-[#A2A2A2] text-md mb-2 font-bold tracking-wider">
                           Active Jobs
@@ -861,9 +817,7 @@ function DashboardPage() {
                     </div>
                   ) : (
                     <div>
-                      <label className="block text-gray-300 mb-2">
-                        Amount (ETH)
-                      </label>
+                      <label className="block text-gray-300 mb-2">Amount (ETH)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -880,8 +834,7 @@ function DashboardPage() {
                     disabled={
                       isStaking ||
                       !stakeAmount ||
-                      Number(stakeAmount) >
-                        Number(accountBalance?.formatted || 0)
+                      Number(stakeAmount) > Number(accountBalance?.formatted || 0)
                     }
                     className="relative bg-[#222222] text-[#000000] border border-[#222222] px-6 py-2 sm:px-8 sm:py-3 rounded-full group transition-transform w-full"
                   >
@@ -891,18 +844,16 @@ function DashboardPage() {
                       className={`font-actayRegular relative z-10 px-0 py-3 sm:px-3 md:px-6 lg:px-2 rounded-full translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out text-xs sm:text-base ${
                         isStaking ||
                         !stakeAmount ||
-                        Number(stakeAmount) >
-                          Number(accountBalance?.formatted || 0)
-                          ? "opacity-50"
-                          : ""
+                        Number(stakeAmount) > Number(accountBalance?.formatted || 0)
+                          ? 'opacity-50'
+                          : ''
                       }`}
                     >
                       {isStaking
-                        ? "Staking..."
-                        : Number(stakeAmount) >
-                            Number(accountBalance?.formatted || 0)
-                          ? "Insufficient ETH"
-                          : "Stake"}
+                        ? 'Staking...'
+                        : Number(stakeAmount) > Number(accountBalance?.formatted || 0)
+                          ? 'Insufficient ETH'
+                          : 'Stake'}
                     </span>
                   </button>
 
@@ -922,9 +873,7 @@ function DashboardPage() {
           </div>
         )}
 
-        {!isWalletInstalled && showModal && (
-          <WalletModal onClose={() => setShowModal(false)} />
-        )}
+        {!isWalletInstalled && showModal && <WalletModal onClose={() => setShowModal(false)} />}
       </div>
     </Layout>
   );

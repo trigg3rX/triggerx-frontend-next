@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
-import sanityClient from "../../lib/sanity"; 
-import { FaArrowUp } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from 'react';
+import sanityClient from '../../lib/sanity';
+import { FaArrowUp } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 import Head from 'next/head';
-import Layout from "@/components/layout/Layout";
-import DevHubLoading from "./loading";
+import Layout from '@/components/layout/Layout';
+import DevHubLoading from './loading';
 
 const query = `*[_type == "post"] | order(_createdAt desc) {
   _id,     
@@ -34,25 +34,22 @@ function Devhub() {
       setIsLoading(true);
       setError(null);
       try {
-        console.log("Fetching posts from Sanity...");
+        console.log('Fetching posts from Sanity...');
         const fetchedPosts = await sanityClient.fetch(query);
-        console.log("Sanity fetch successful:", fetchedPosts);
+        console.log('Sanity fetch successful:', fetchedPosts);
 
         if (!Array.isArray(fetchedPosts)) {
-          console.warn(
-            "Sanity fetch did not return an array. Result:",
-            fetchedPosts
-          );
+          console.warn('Sanity fetch did not return an array. Result:', fetchedPosts);
           setPosts([]);
         } else {
           setPosts(fetchedPosts);
         }
       } catch (err) {
-        console.error("Error fetching posts from Sanity:", err);
+        console.error('Error fetching posts from Sanity:', err);
         setError(err);
       } finally {
         setIsLoading(false);
-        console.log("Finished fetching attempt.");
+        console.log('Finished fetching attempt.');
       }
     }
 
@@ -64,11 +61,10 @@ function Devhub() {
   }
 
   if (error) {
-    console.error("Rendering error state:", error);
+    console.error('Rendering error state:', error);
     return (
       <div>
-        Oops! We encountered an issue fetching data. Please try again later.
-        Error: {error.message}
+        Oops! We encountered an issue fetching data. Please try again later. Error: {error.message}
       </div>
     );
   }
@@ -79,7 +75,7 @@ function Devhub() {
 
   const handleItemClick = (slug) => {
     if (!slug) {
-      console.warn("Cannot navigate without a slug.");
+      console.warn('Cannot navigate without a slug.');
       return;
     }
 
@@ -102,18 +98,17 @@ function Devhub() {
       <div className="min-h-screen md:mt-[20rem] mt-[10rem] w-[90%] mx-auto">
         <div className="w-full flex items-center justify-between">
           <h4 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-left px-4 mb-8 flex items-center gap-3">
-            Total{" "}
-            <span className="text-[#FBF197] text-[25px]">
-              {" "}
-              {` { ${posts.length} } `}
-            </span>
+            Total <span className="text-[#FBF197] text-[25px]"> {` { ${posts.length} } `}</span>
           </h4>
 
-          <button onClick={() => router.push('/api')} className="relative bg-[#222222] text-black border border-black px-6 py-2 sm:px-8 sm:py-3 rounded-full group transition-transform">
+          <button
+            onClick={() => router.push('/api')}
+            className="relative bg-[#222222] text-black border border-black px-6 py-2 sm:px-8 sm:py-3 rounded-full group transition-transform"
+          >
             <span className="absolute inset-0 bg-[#222222] border border-[#FFFFFF80]/50 rounded-full scale-100 translate-y-0 transition-all duration-300 ease-out group-hover:translate-y-2"></span>
             <span className="absolute inset-0 bg-white rounded-full scale-100 translate-y-0 group-hover:translate-y-0"></span>
             <span className="font-actayRegular relative z-10 px-0 py-3 sm:px-3 md:px-6 lg:px-2 rounded-full translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out text-xs sm:text-base">
-            API Services
+              API Services
             </span>
           </button>
         </div>

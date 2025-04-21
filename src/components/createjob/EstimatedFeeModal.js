@@ -1,8 +1,8 @@
-import { Dialog } from "@headlessui/react";
-import { FiInfo } from "react-icons/fi";
-import React, { useEffect, useRef, useState } from "react";
-import { Tooltip } from "antd";
-import { useBalance, useAccount } from "wagmi";
+import { Dialog } from '@headlessui/react';
+import { FiInfo } from 'react-icons/fi';
+import React, { useEffect, useRef, useState } from 'react';
+import { Tooltip } from 'antd';
+import { useBalance, useAccount } from 'wagmi';
 
 export function EstimatedFeeModal({
   isOpen,
@@ -22,8 +22,7 @@ export function EstimatedFeeModal({
 
   const hasEnoughBalance = userBalance >= estimatedFee;
   const requiredEth = (0.001 * estimatedFee).toFixed(6);
-  const hasEnoughEthToStake =
-    ethBalance && Number(ethBalance.formatted) >= Number(requiredEth);
+  const hasEnoughEthToStake = ethBalance && Number(ethBalance.formatted) >= Number(requiredEth);
   const [showRequiredTGTooltip, setShowRequiredTGTooltip] = useState(false);
   const [showBalanceTooltip, setShowBalanceTooltip] = useState(false);
   const [showStakeTooltip, setShowStakeTooltip] = useState(false);
@@ -32,7 +31,7 @@ export function EstimatedFeeModal({
   const canvasRef = useRef(null);
   const [character, setCharacter] = useState([{ x: 10, y: 10 }]);
   const [food, setFood] = useState({ x: 15, y: 15 });
-  const [direction, setDirection] = useState("RIGHT");
+  const [direction, setDirection] = useState('RIGHT');
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
@@ -48,16 +47,13 @@ export function EstimatedFeeModal({
     setGameStarted(false);
     setCharacter([{ x: 10, y: 10 }]);
     setFood({ x: 15, y: 15 });
-    setDirection("RIGHT");
+    setDirection('RIGHT');
     setGameOver(false);
     setScore(0);
   };
 
   useEffect(() => {
-    if (
-      currentStep < steps.length &&
-      steps[currentStep].status === "completed"
-    ) {
+    if (currentStep < steps.length && steps[currentStep].status === 'completed') {
       setTimeout(() => setCurrentStep((prev) => prev + 1), 10000);
     }
   }, [steps, currentStep]);
@@ -65,18 +61,18 @@ export function EstimatedFeeModal({
   useEffect(() => {
     const handleKeyDown = (e) => {
       const keyMap = {
-        ArrowUp: "UP",
-        ArrowDown: "DOWN",
-        ArrowLeft: "LEFT",
-        ArrowRight: "RIGHT",
+        ArrowUp: 'UP',
+        ArrowDown: 'DOWN',
+        ArrowLeft: 'LEFT',
+        ArrowRight: 'RIGHT',
       };
       if (keyMap[e.key] && !gameOver) {
         setDirection(keyMap[e.key]);
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [gameOver, gameStarted]);
 
   const characterFrames = [];
@@ -87,7 +83,7 @@ export function EstimatedFeeModal({
   }
 
   const ethImage = new Image();
-  ethImage.src = "/character/token.svg";
+  ethImage.src = '/character/token.svg';
 
   useEffect(() => {
     if (!gameStarted || gameOver) return;
@@ -99,28 +95,23 @@ export function EstimatedFeeModal({
         let head = { ...newCharacter[0] };
 
         switch (direction) {
-          case "UP":
+          case 'UP':
             head.y -= 1;
             break;
-          case "DOWN":
+          case 'DOWN':
             head.y += 1;
             break;
-          case "LEFT":
+          case 'LEFT':
             head.x -= 1;
             break;
-          case "RIGHT":
+          case 'RIGHT':
             head.x += 1;
             break;
           default:
             break;
         }
 
-        if (
-          head.x < 0 ||
-          head.x >= gridSize ||
-          head.y < 0 ||
-          head.y >= gridSize
-        ) {
+        if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize) {
           setGameOver(true);
           return prevCharacter;
         }
@@ -152,27 +143,24 @@ export function EstimatedFeeModal({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.fillStyle = "black";
+    ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const currentFrame = characterFrames[frameIndex];
     character.forEach((segment) => {
       ctx.save();
-      ctx.translate(
-        segment.x * tileSize + tileSize / 2,
-        segment.y * tileSize + tileSize / 2
-      );
+      ctx.translate(segment.x * tileSize + tileSize / 2, segment.y * tileSize + tileSize / 2);
 
-      if (direction === "LEFT") {
+      if (direction === 'LEFT') {
         ctx.scale(-1, 1);
       }
 
       ctx.drawImage(
         currentFrame,
-        direction === "LEFT" ? -tileSize / 2 : -tileSize / 2,
+        direction === 'LEFT' ? -tileSize / 2 : -tileSize / 2,
         -tileSize / 2,
         tileSize,
         tileSize
@@ -181,79 +169,69 @@ export function EstimatedFeeModal({
       ctx.restore();
     });
 
-    ctx.drawImage(
-      ethImage,
-      food.x * tileSize,
-      food.y * tileSize,
-      tileSize,
-      tileSize
-    );
+    ctx.drawImage(ethImage, food.x * tileSize, food.y * tileSize, tileSize, tileSize);
 
     if (foodEatenAnimation) {
-      ctx.fillStyle = "white";
-      ctx.font = "20px Arial";
+      ctx.fillStyle = 'white';
+      ctx.font = '20px Arial';
       ctx.fillText(
-        "+1",
+        '+1',
         foodEatenAnimation.x * tileSize + tileSize / 4,
         foodEatenAnimation.y * tileSize + tileSize / 1.5
       );
     }
 
     if (!gameStarted) {
-      ctx.fillStyle = "yellow";
-      ctx.font = "18px Arial";
+      ctx.fillStyle = 'yellow';
+      ctx.font = '18px Arial';
       ctx.fillText(
-        "Fee-ding time! Tap to start the token tango",
+        'Fee-ding time! Tap to start the token tango',
         canvas.width / 6 - 10,
         canvas.height / 3 + 30
       );
       ctx.fillText(
-        "while we calculate your job fees.",
+        'while we calculate your job fees.',
         canvas.width / 6 + 30,
         canvas.height / 3 + 60
       );
-      ctx.fillText(
-        "Use arrow keys to feast!🍀",
-        canvas.width / 3 - 30,
-        canvas.height / 3 + 100
-      );
+      ctx.fillText('Use arrow keys to feast!🍀', canvas.width / 3 - 30, canvas.height / 3 + 100);
     }
 
     if (gameOver) {
-      ctx.fillStyle = "yellow";
-      ctx.font = "20px Arial";
+      ctx.fillStyle = 'yellow';
+      ctx.font = '20px Arial';
+      ctx.fillText('Fee-ding frenzy finished!', canvas.width / 4 + 30, canvas.height / 3 + 30);
       ctx.fillText(
-        "Fee-ding frenzy finished!",
-        canvas.width / 4 + 30,
-        canvas.height / 3 + 30
-      );
-      ctx.fillText(
-        "Still brewing up your job fees... almost there!🍀⌛",
+        'Still brewing up your job fees... almost there!🍀⌛',
         canvas.width / 10 - 30,
         canvas.height / 3 + 60
       );
-      ctx.fillText(
-        `Score: ${score}`,
-        canvas.width / 3 + 50,
-        canvas.height / 2 + 30
-      );
-      ctx.fillText(
-        "Tap to Restart",
-        canvas.width / 3 + 20,
-        canvas.height / 2 + 60
-      );
+      ctx.fillText(`Score: ${score}`, canvas.width / 3 + 50, canvas.height / 2 + 30);
+      ctx.fillText('Tap to Restart', canvas.width / 3 + 20, canvas.height / 2 + 60);
     }
-  }, [character, food, isOpen, gameOver, gameStarted, score, frameIndex, characterFrames, ethImage, direction, foodEatenAnimation]);
+  }, [
+    character,
+    food,
+    isOpen,
+    gameOver,
+    gameStarted,
+    score,
+    frameIndex,
+    characterFrames,
+    ethImage,
+    direction,
+    foodEatenAnimation,
+  ]);
 
   useEffect(() => {
     if (isOpen) {
       resetProcessing();
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = 'unset';
     }
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
 
@@ -262,7 +240,7 @@ export function EstimatedFeeModal({
       setGameStarted(true);
       setCharacter([{ x: 10, y: 10 }]);
       setFood({ x: 15, y: 15 });
-      setDirection("RIGHT");
+      setDirection('RIGHT');
       setGameOver(false);
       setScore(0);
     }
@@ -271,24 +249,20 @@ export function EstimatedFeeModal({
 
   const handleClose = () => {
     resetProcessing();
-    document.body.style.overflow = "unset";
+    document.body.style.overflow = 'unset';
     onClose();
   };
 
   const handleStake = () => {
     resetProcessing();
-    document.body.style.overflow = "unset";
+    document.body.style.overflow = 'unset';
     onStake();
   };
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={handleClose}
-      className="relative z-[10000]"
-    >
+    <Dialog open={isOpen} onClose={handleClose} className="relative z-[10000]">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999]" aria-hidden="true" />
-      
+
       <div className="fixed inset-0 flex items-center justify-center z-[10000]">
         <Dialog.Panel className="bg-[#141414] p-8 rounded-2xl border border-white/10 backdrop-blur-xl w-full max-w-md">
           {showProcessing && !showFees && (
@@ -326,20 +300,22 @@ export function EstimatedFeeModal({
           {(showProcessing || showFees) && (
             <>
               <div className="w-full bg-black rounded-xl flex flex-col gap-2 shadow-lg border border-gray-600 ">
-              {!(showFees && gameOver) ? (
-                <>
-                  <canvas
-                    ref={canvasRef}
-                    width={gridSize * tileSize}
-                    height={gridSize * tileSize}
-                    onClick={handleCanvasClick}
-                  />
-                </>
-              ) : (
-                <div className="text-white text-center py-6 px-6">
-                  {score > 0 ? "Fees calculated! Your token-grabbing skills have been noted.😉" : "Fees calculated! Your token-grabbing skills have been noted.😉"}
-                </div>
-              )}
+                {!(showFees && gameOver) ? (
+                  <>
+                    <canvas
+                      ref={canvasRef}
+                      width={gridSize * tileSize}
+                      height={gridSize * tileSize}
+                      onClick={handleCanvasClick}
+                    />
+                  </>
+                ) : (
+                  <div className="text-white text-center py-6 px-6">
+                    {score > 0
+                      ? 'Fees calculated! Your token-grabbing skills have been noted.😉'
+                      : 'Fees calculated! Your token-grabbing skills have been noted.😉'}
+                  </div>
+                )}
               </div>
               <div className="text-white text-center py-2">Score: {score}</div>
             </>
@@ -366,9 +342,8 @@ export function EstimatedFeeModal({
                           <div className="flex flex-col gap-2 text-sm text-gray-300">
                             <div className="flex items-center gap-2">
                               <span>
-                                TriggerGas (TG) is the standard unit for calculating
-                                computational and resource costs in the TriggerX
-                                platform.
+                                TriggerGas (TG) is the standard unit for calculating computational
+                                and resource costs in the TriggerX platform.
                               </span>
                             </div>
                           </div>
@@ -377,18 +352,18 @@ export function EstimatedFeeModal({
                     </div>
                   </div>
                   <p>
-                    {" "}
+                    {' '}
                     {estimatedFee && estimatedFee > 0
                       ? ` ${estimatedFee.toFixed(4)} TG`
-                      : "Something went wrong"}
+                      : 'Something went wrong'}
                   </p>
                 </div>
 
                 <div className="text-gray-300 flex justify-between">
                   <p className="flex">Your TG Balance</p>
-                  <Tooltip title={userBalance || "0"} placement="top">
+                  <Tooltip title={userBalance || '0'} placement="top">
                     <p className="cursor-help">
-                      {userBalance ? Number(userBalance).toFixed(6) : "0.0000"}{" "}
+                      {userBalance ? Number(userBalance).toFixed(6) : '0.0000'}{' '}
                     </p>
                   </Tooltip>
                 </div>
@@ -396,7 +371,7 @@ export function EstimatedFeeModal({
                 {!hasEnoughBalance && (
                   <div className="text-gray-300 flex justify-between">
                     <div className="flex">
-                      {" "}
+                      {' '}
                       Required ETH to stake
                       <div className="relative top-[4px]">
                         <FiInfo
@@ -410,8 +385,8 @@ export function EstimatedFeeModal({
                             <div className="flex flex-col gap-2 text-sm text-gray-300">
                               <div className="flex items-center gap-2">
                                 <span>
-                                  Required ETH to Stake is based on the total
-                                  TriggerGas consumed and TriggerGas's unit price.
+                                  Required ETH to Stake is based on the total TriggerGas consumed
+                                  and TriggerGas's unit price.
                                 </span>
                               </div>
                             </div>
@@ -429,8 +404,8 @@ export function EstimatedFeeModal({
                     onClick={handleStake}
                     className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
                       !estimatedFee || estimatedFee <= 0
-                        ? "bg-gray-400 text-gray-700"
-                        : "bg-white text-black"
+                        ? 'bg-gray-400 text-gray-700'
+                        : 'bg-white text-black'
                     }`}
                   >
                     Next
@@ -441,11 +416,11 @@ export function EstimatedFeeModal({
                     disabled={!hasEnoughEthToStake}
                     className={`flex-1 px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
                       !hasEnoughEthToStake
-                        ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                        : "bg-white text-black"
+                        ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                        : 'bg-white text-black'
                     }`}
                   >
-                    {hasEnoughEthToStake ? "Stake ETH" : "Insufficient ETH"}
+                    {hasEnoughEthToStake ? 'Stake ETH' : 'Insufficient ETH'}
                   </button>
                 )}
                 <button

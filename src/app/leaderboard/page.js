@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { Tooltip } from "antd";
-import Head from "next/head";
-import Layout from "@/components/layout/Layout";
-import LeaderboardSkeleton from "../../components/leaderboard/LeaderboardSkeleton";
-import LeaderboardLoading from "./loading";
+import React, { useState, useEffect } from 'react';
+import { Tooltip } from 'antd';
+import Head from 'next/head';
+import Layout from '@/components/layout/Layout';
+import LeaderboardSkeleton from '../../components/leaderboard/LeaderboardSkeleton';
+import LeaderboardLoading from './loading';
 
 const Leaderboard = () => {
-  const [activeTab, setActiveTab] = useState("keeper");
+  const [activeTab, setActiveTab] = useState('keeper');
   const [copyStatus, setCopyStatus] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,18 +28,18 @@ const Leaderboard = () => {
         let apiUrl;
         const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-        if (activeTab === "keeper") {
+        if (activeTab === 'keeper') {
           apiUrl = `${API_BASE_URL}/api/leaderboard/keepers`;
-        } else if (activeTab === "developer" || activeTab === "contributor") {
+        } else if (activeTab === 'developer' || activeTab === 'contributor') {
           apiUrl = `${API_BASE_URL}/api/leaderboard/users`;
         }
 
         const response = await fetch(apiUrl);
 
         const data = await response.json();
-        console.log("Raw API response:", data);
+        console.log('Raw API response:', data);
 
-        if (activeTab === "keeper") {
+        if (activeTab === 'keeper') {
           const transformedKeeperData = Array.isArray(data)
             ? data.map((keeper) => ({
                 operator: keeper.keeper_name,
@@ -56,12 +56,12 @@ const Leaderboard = () => {
             ...prev,
             keepers: transformedKeeperData,
           }));
-        } else if (activeTab === "developer") {
+        } else if (activeTab === 'developer') {
           const transformedUserData = Array.isArray(data)
             ? data.map((user) => ({
                 address: user.user_address,
                 totalJobs: user.total_jobs,
-                tasksExecuted: user.tasks_completed, 
+                tasksExecuted: user.tasks_completed,
                 points: user.user_points,
               }))
             : [];
@@ -83,7 +83,7 @@ const Leaderboard = () => {
           }));
         }
       } catch (err) {
-        console.error("Error fetching leaderboard data:", err);
+        console.error('Error fetching leaderboard data:', err);
       } finally {
         setIsLoading(false);
       }
@@ -123,9 +123,7 @@ const Leaderboard = () => {
               </th>
             </Tooltip>
             <Tooltip title="Job Attested" color="#2A2A2A">
-              <th className="px-6 py-5 text-left text-[#FFFFFF] font-bold md:text-lg">
-                Attested
-              </th>
+              <th className="px-6 py-5 text-left text-[#FFFFFF] font-bold md:text-lg">Attested</th>
             </Tooltip>
             <th className="px-6 py-5 text-left text-[#FFFFFF] font-bold md:text-lg xs:text-sm">
               Points
@@ -162,7 +160,7 @@ const Leaderboard = () => {
                         onClick={() =>
                           window.open(
                             `https://app.eigenlayer.xyz/operator/${item.address}`,
-                            "_blank"
+                            '_blank'
                           )
                         }
                         className="px-5 py-2 text-sm text-white underline decoration-2 decoration-white underline-offset-4"
@@ -213,9 +211,7 @@ const Leaderboard = () => {
                       {item.address}
                     </span>
                     <button
-                      onClick={() =>
-                        copyAddressToClipboard(item.address, item.id)
-                      }
+                      onClick={() => copyAddressToClipboard(item.address, item.id)}
                       className="ml-2 p-1 hover:bg-[#252525] rounded-md transition-all"
                       title="Copy address"
                     >
@@ -245,14 +241,7 @@ const Leaderboard = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         >
-                          <rect
-                            x="9"
-                            y="9"
-                            width="13"
-                            height="13"
-                            rx="2"
-                            ry="2"
-                          ></rect>
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                           <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
                         </svg>
                       )}
@@ -338,52 +327,65 @@ const Leaderboard = () => {
     <Layout>
       <Head>
         <title>TriggerX | Leaderboard</title>
-        <meta name="description" content="View real-time rankings and performance metrics for TriggerX operators, developers, and contributors" />
-        
+        <meta
+          name="description"
+          content="View real-time rankings and performance metrics for TriggerX operators, developers, and contributors"
+        />
+
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={`TriggerX | ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Leaderboard`} />
-        <meta property="og:description" content="View real-time rankings and performance metrics for TriggerX operators, developers, and contributors" />
+        <meta
+          property="og:title"
+          content={`TriggerX | ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Leaderboard`}
+        />
+        <meta
+          property="og:description"
+          content="View real-time rankings and performance metrics for TriggerX operators, developers, and contributors"
+        />
         <meta property="og:image" content={`${baseUrl}/images/${activeTab}-og.png`} />
         <meta property="og:url" content={`${baseUrl}/leaderboard`} />
-        
+
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`TriggerX | ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Leaderboard`} />
-        <meta name="twitter:description" content="View real-time rankings and performance metrics for TriggerX operators, developers, and contributors" />
+        <meta
+          name="twitter:title"
+          content={`TriggerX | ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Leaderboard`}
+        />
+        <meta
+          name="twitter:description"
+          content="View real-time rankings and performance metrics for TriggerX operators, developers, and contributors"
+        />
         <meta name="twitter:image" content={`${baseUrl}/images/${activeTab}-og.png`} />
       </Head>
       <div className="min-h-screen md:mt-[20rem] mt-[10rem]">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center">
-          Leaderboard
-        </h1>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center">Leaderboard</h1>
 
         <div className="max-w-[1600px] w-[85%] mx-auto flex justify-between items-center my-10 bg-[#181818F0] p-2 rounded-lg">
           <button
             className={`w-[33%] text-[#FFFFFF] font-bold md:text-lg xs:text-sm p-4 rounded-lg ${
-              activeTab === "keeper"
-                ? "bg-gradient-to-r from-[#D9D9D924] to-[#14131324] border border-[#4B4A4A]"
-                : "bg-transparent"
+              activeTab === 'keeper'
+                ? 'bg-gradient-to-r from-[#D9D9D924] to-[#14131324] border border-[#4B4A4A]'
+                : 'bg-transparent'
             }`}
-            onClick={() => setActiveTab("keeper")}
+            onClick={() => setActiveTab('keeper')}
           >
             Keeper
           </button>
           <button
             className={`w-[33%] text-[#FFFFFF] font-bold md:text-lg xs:text-sm p-4 rounded-lg ${
-              activeTab === "developer"
-                ? "bg-gradient-to-r from-[#D9D9D924] to-[#14131324] border border-[#4B4A4A]"
-                : "bg-transparent"
+              activeTab === 'developer'
+                ? 'bg-gradient-to-r from-[#D9D9D924] to-[#14131324] border border-[#4B4A4A]'
+                : 'bg-transparent'
             }`}
-            onClick={() => setActiveTab("developer")}
+            onClick={() => setActiveTab('developer')}
           >
             Developer
           </button>
           <button
             className={`w-[33%] text-[#FFFFFF] font-bold md:text-lg xs:text-sm p-4 rounded-lg ${
-              activeTab === "contributor"
-                ? "bg-gradient-to-r from-[#D9D9D924] to-[#14131324] border border-[#4B4A4A]"
-                : "bg-transparent"
+              activeTab === 'contributor'
+                ? 'bg-gradient-to-r from-[#D9D9D924] to-[#14131324] border border-[#4B4A4A]'
+                : 'bg-transparent'
             }`}
-            onClick={() => setActiveTab("contributor")}
+            onClick={() => setActiveTab('contributor')}
           >
             Contributor
           </button>
@@ -392,19 +394,18 @@ const Leaderboard = () => {
           <div
             className="h-[650px] overflow-y-auto max-w-[1600px] mx-auto w-[85%] bg-[#141414] px-5 rounded-lg"
             style={{
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
             }}
           >
             {!isLoading &&
-              (activeTab === "keeper"
+              (activeTab === 'keeper'
                 ? renderKeeperTable()
-                : activeTab === "developer"
-                ? renderDeveloperTable()
-                : renderContributorTable())}
+                : activeTab === 'developer'
+                  ? renderDeveloperTable()
+                  : renderContributorTable())}
 
             {isLoading && <LeaderboardSkeleton activeTab={activeTab} />}
-
 
             {error && !isLoading && (
               <div className="flex justify-center h-[500px] items-center">

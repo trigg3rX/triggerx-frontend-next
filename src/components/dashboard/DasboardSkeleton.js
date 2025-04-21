@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const DashboardSkeleton = () => {
   const skeletonRows = Array(5).fill(null);

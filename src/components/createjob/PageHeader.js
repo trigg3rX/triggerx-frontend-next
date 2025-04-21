@@ -5,8 +5,7 @@ export function PageHeader() {
         Create Automation Job
       </h1>
       <h4 className="text-sm sm:text-base lg:text-lg text-[#A2A2A2] leading-relaxed">
-        Set up your automated blockchain tasks with precise conditions and
-        parameters.
+        Set up your automated blockchain tasks with precise conditions and parameters.
       </h4>
     </div>
   );

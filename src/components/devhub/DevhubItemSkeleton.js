@@ -1,47 +1,46 @@
-import React from "react";
+import React from 'react';
 
-const SkeletonElement = ({ type, className = "" }) => {
-  const baseClasses = "bg-[#1A1A1A] rounded animate-pulse";
-  let specificClasses = "";
+const SkeletonElement = ({ type, className = '' }) => {
+  const baseClasses = 'bg-[#1A1A1A] rounded animate-pulse';
+  let specificClasses = '';
 
   switch (type) {
-    case "title":
-      specificClasses = "h-10 w-3/4 mb-4";
+    case 'title':
+      specificClasses = 'h-10 w-3/4 mb-4';
       break;
-    case "subtitle":
-      specificClasses = "h-6 w-1/2 mb-10";
+    case 'subtitle':
+      specificClasses = 'h-6 w-1/2 mb-10';
       break;
-    case "image":
-      specificClasses = "h-60 md:h-80 lg:h-96 w-full rounded-2xl md:rounded-3xl mb-8";
+    case 'image':
+      specificClasses = 'h-60 md:h-80 lg:h-96 w-full rounded-2xl md:rounded-3xl mb-8';
       break;
-    case "line":
-      specificClasses = "h-4 w-full mb-2";
+    case 'line':
+      specificClasses = 'h-4 w-full mb-2';
       break;
-    case "line-short":
-        specificClasses = "h-4 w-5/6 mb-2";
-        break;
-    case "line-xs":
-      specificClasses = "h-3 w-2/3 mb-2";
+    case 'line-short':
+      specificClasses = 'h-4 w-5/6 mb-2';
       break;
-    case "button":
-      specificClasses = "h-10 w-40 rounded-full";
+    case 'line-xs':
+      specificClasses = 'h-3 w-2/3 mb-2';
       break;
-    case "toc-title":
-      specificClasses = "h-6 w-1/2 mb-4";
+    case 'button':
+      specificClasses = 'h-10 w-40 rounded-full';
       break;
-    case "toc-item":
-      specificClasses = "h-4 w-full mb-2";
+    case 'toc-title':
+      specificClasses = 'h-6 w-1/2 mb-4';
       break;
-    case "heading":
-        specificClasses = "h-8 w-1/3 mb-4";
-        break;
+    case 'toc-item':
+      specificClasses = 'h-4 w-full mb-2';
+      break;
+    case 'heading':
+      specificClasses = 'h-8 w-1/3 mb-4';
+      break;
     default:
-      specificClasses = "h-4 w-full";
+      specificClasses = 'h-4 w-full';
   }
 
   return <div className={`${baseClasses} ${specificClasses} ${className}`}></div>;
 };
-
 
 const DevhubItemSkeleton = () => {
   return (
@@ -57,12 +56,12 @@ const DevhubItemSkeleton = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 md:gap-y-2 text-xs sm:text-sm text-white my-8 md:my-10 px-2 sm:px-4">
             <div className="space-y-3">
-               <SkeletonElement type="line-xs" />
-               <SkeletonElement type="line-xs" />
+              <SkeletonElement type="line-xs" />
+              <SkeletonElement type="line-xs" />
             </div>
             <div className="space-y-3">
-               <SkeletonElement type="line-xs" />
-               <SkeletonElement type="line-xs" />
+              <SkeletonElement type="line-xs" />
+              <SkeletonElement type="line-xs" />
             </div>
           </div>
 
@@ -80,28 +79,27 @@ const DevhubItemSkeleton = () => {
               <SkeletonElement type="toc-item" />
               <SkeletonElement type="toc-item" />
               <SkeletonElement type="toc-item" />
-              <SkeletonElement type="toc-item" className="w-3/4"/>
+              <SkeletonElement type="toc-item" className="w-3/4" />
             </div>
           </div>
-           <div className="md:hidden mb-4">
-                <SkeletonElement type="line" className="h-10" />
-           </div>
+          <div className="md:hidden mb-4">
+            <SkeletonElement type="line" className="h-10" />
+          </div>
         </aside>
 
         <article className="w-full md:w-3/4 lg:w-4/5 xl:flex-1 space-y-4">
-           <SkeletonElement type="heading" />
-           <SkeletonElement type="line" />
-           <SkeletonElement type="line" />
-           <SkeletonElement type="line-short" />
-           <br/>
-           <SkeletonElement type="line" />
-           <SkeletonElement type="line-short" />
-           <br/>
-           <SkeletonElement type="heading" className="w-1/2"/>
-           <SkeletonElement type="line" />
-           <SkeletonElement type="line-short" />
-           <SkeletonElement type="line" />
-
+          <SkeletonElement type="heading" />
+          <SkeletonElement type="line" />
+          <SkeletonElement type="line" />
+          <SkeletonElement type="line-short" />
+          <br />
+          <SkeletonElement type="line" />
+          <SkeletonElement type="line-short" />
+          <br />
+          <SkeletonElement type="heading" className="w-1/2" />
+          <SkeletonElement type="line" />
+          <SkeletonElement type="line-short" />
+          <SkeletonElement type="line" />
         </article>
       </div>
     </div>

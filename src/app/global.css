@@ -1,12 +1,12 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 :root {
-  --font-heading: "HeadingFont";
-  --font-subheading: "SubHeadingFont";
-  --font-subtext: "SubText";
-  --font-actay: "ActayRegular";
+  --font-heading: 'HeadingFont';
+  --font-subheading: 'SubHeadingFont';
+  --font-subtext: 'SubText';
+  --font-actay: 'ActayRegular';
   --background: #0a0a0a;
   --foreground: #ededed;
 }
@@ -14,7 +14,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  background-image: url("../assets/grid.png");
+  background-image: url('../assets/grid.png');
 }
 
 h1 {
@@ -55,23 +55,23 @@ input {
 }
 
 @font-face {
-  font-family: "HeadingFont";
-  src: url("../../public/fonts/Book23.ttf") format("truetype");
+  font-family: 'HeadingFont';
+  src: url('../../public/fonts/Book23.ttf') format('truetype');
 }
 
 @font-face {
-  font-family: "SubHeadingFont";
-  src: url("../../public/fonts/ActayCondensed-Thin.otf") format("opentype");
+  font-family: 'SubHeadingFont';
+  src: url('../../public/fonts/ActayCondensed-Thin.otf') format('opentype');
 }
 
 @font-face {
-  font-family: "SubText";
-  src: url("../../public/fonts/ActayWide-Bold.otf") format("opentype");
+  font-family: 'SubText';
+  src: url('../../public/fonts/ActayWide-Bold.otf') format('opentype');
 }
 
 @font-face {
-  font-family: "ActayRegular";
-  src: url("../../public/fonts/Actay-Regular.otf") format("opentype");
+  font-family: 'ActayRegular';
+  src: url('../../public/fonts/Actay-Regular.otf') format('opentype');
 }
 
 @keyframes magneticCorner {
@@ -105,7 +105,7 @@ input {
 }
 
 .liquid-button::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -134,7 +134,7 @@ input {
 }
 
 .liquid-button2::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -154,7 +154,7 @@ input {
   height: 100%;
 }
 .headerbg {
-  background-image: url("../assets/grid.png");
+  background-image: url('../assets/grid.png');
 }
 
 .spinner_rXNP {
@@ -191,12 +191,11 @@ input {
 }
 .loader:before,
 .loader:after {
-  content: "";
+  content: '';
   height: 20px;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(farthest-side, #000 95%, #0000) 35% 35%/6px 6px
-    no-repeat #f8ff7c;
+  background: radial-gradient(farthest-side, #000 95%, #0000) 35% 35%/6px 6px no-repeat #f8ff7c;
   animation: l5 3s infinite;
 }
 @keyframes l5 {

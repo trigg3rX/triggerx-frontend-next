@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import Image from "next/image";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import logo from "../../assets/logo.svg";
-import nav from "../../assets/nav.svg";
-import leaderboardNav from "../../assets/leaderboardNav.svg";
-import devhubNav from "../../assets/devhubNav.png";
+import React, { useState, useRef, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import Image from 'next/image';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import logo from '../../assets/logo.svg';
+import nav from '../../assets/nav.svg';
+import leaderboardNav from '../../assets/leaderboardNav.svg';
+import devhubNav from '../../assets/devhubNav.png';
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -33,7 +33,7 @@ function Header() {
       width: `${rect.width}px`,
       height: `${rect.height}px`,
       transform: `translateX(${rect.x - navRect.x}px)`,
-      transition: prevRect ? "all 0.3s ease" : "none",
+      transition: prevRect ? 'all 0.3s ease' : 'none',
     });
 
     setPrevRect(rect);
@@ -43,7 +43,7 @@ function Header() {
     setHighlightStyle((prev) => ({
       ...prev,
       opacity: 0,
-      transition: "all 0.3s ease",
+      transition: 'all 0.3s ease',
     }));
   };
 
@@ -52,16 +52,16 @@ function Header() {
       setIsScrolled(window.scrollY > 0);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   useEffect(() => {
-    if (pathname === "/leaderboard") {
-      setNavImage(leaderboardNav); 
-    } else if (pathname === "/devhub") {
+    if (pathname === '/leaderboard') {
+      setNavImage(leaderboardNav);
+    } else if (pathname === '/devhub') {
       setNavImage(devhubNav);
     } else {
       setNavImage(nav);
@@ -73,7 +73,14 @@ function Header() {
       <div className=" xl:w-[90%] md:w-[90%] mx-auto  justify-between my-10 header sm:hidden hidden lg:flex md:hidden items-center ">
         <div className=" ">
           <a href="https://www.triggerx.network/" target="blank">
-            <Image src={logo} alt="TriggerX Logo" className="xl:w-full lg:w-[200px]" width={200} height={50} priority />
+            <Image
+              src={logo}
+              alt="TriggerX Logo"
+              className="xl:w-full lg:w-[200px]"
+              width={200}
+              height={50}
+              priority
+            />
           </a>
         </div>
         <div className="relative flex flex-col items-center">
@@ -85,7 +92,7 @@ function Header() {
             height={200}
             style={{
               top: isScrolled ? -300 : -50,
-              transition: "top 0.7s ease",
+              transition: 'top 0.7s ease',
             }}
             priority
           />
@@ -103,12 +110,12 @@ function Header() {
               <h4
                 onMouseEnter={handleMouseEnter}
                 onClick={() => {
-                  router.push("/devhub");
+                  router.push('/devhub');
                 }}
                 className={`text-center xl:w-[150px] lg:w-[130px]  lg:text-[12px] xl:text-base ${
-                  isActiveRoute("/devhub")
-                    ? "bg-gradient-to-r from-[#D9D9D924] to-[#14131324] rounded-xl border border-[#4B4A4A]"
-                    : "transparent"
+                  isActiveRoute('/devhub')
+                    ? 'bg-gradient-to-r from-[#D9D9D924] to-[#14131324] rounded-xl border border-[#4B4A4A]'
+                    : 'transparent'
                 }  px-7 py-3 rounded-xl cursor-pointer xl:text-base`}
               >
                 Dev Hub
@@ -117,24 +124,24 @@ function Header() {
               <h4
                 onMouseEnter={handleMouseEnter}
                 onClick={() => {
-                  router.push("/");
+                  router.push('/');
                 }}
                 className={`text-center xl:w-[150px] lg:w-[130px] xl:text-base lg:text-[12px]
                   ${
-                    isActiveRoute("/")
-                      ? "bg-gradient-to-r from-[#D9D9D924] to-[#14131324] rounded-xl border border-[#4B4A4A]"
-                      : "transparent"
+                    isActiveRoute('/')
+                      ? 'bg-gradient-to-r from-[#D9D9D924] to-[#14131324] rounded-xl border border-[#4B4A4A]'
+                      : 'transparent'
                   } px-7 py-3 rounded-xl cursor-pointer`}
               >
                 Create Job
               </h4>
               <h4
                 onMouseEnter={handleMouseEnter}
-                onClick={() => router.push("/dashboard")}
+                onClick={() => router.push('/dashboard')}
                 className={`text-center xl:w-[150px] lg:w-[130px]  lg:text-[12px] xl:text-base ${
-                  isActiveRoute("/dashboard")
-                    ? "bg-gradient-to-r from-[#D9D9D924] to-[#14131324] rounded-xl border border-[#4B4A4A]"
-                    : "transparent"
+                  isActiveRoute('/dashboard')
+                    ? 'bg-gradient-to-r from-[#D9D9D924] to-[#14131324] rounded-xl border border-[#4B4A4A]'
+                    : 'transparent'
                 }
                  px-7 py-3 rounded-xl cursor-pointer`}
               >
@@ -143,12 +150,12 @@ function Header() {
               <h4
                 onMouseEnter={handleMouseEnter}
                 onClick={() => {
-                  router.push("/leaderboard");
+                  router.push('/leaderboard');
                 }}
                 className={`text-center xl:w-[150px] lg:w-[130px]  lg:text-[12px] xl:text-base ${
-                  isActiveRoute("/leaderboard")
-                    ? "bg-gradient-to-r from-[#D9D9D924] to-[#14131324] rounded-xl border border-[#4B4A4A]"
-                    : "transparent"
+                  isActiveRoute('/leaderboard')
+                    ? 'bg-gradient-to-r from-[#D9D9D924] to-[#14131324] rounded-xl border border-[#4B4A4A]'
+                    : 'transparent'
                 }
                 
               }  px-7 py-3 rounded-xl cursor-pointer xl:text-base`}
@@ -159,7 +166,7 @@ function Header() {
           </nav>
         </div>
         <div className="flex items-center">
-          {" "}
+          {' '}
           <ConnectButton chainStatus="icon" accountStatus="address" />
         </div>
       </div>
@@ -168,10 +175,17 @@ function Header() {
           className="absolute  left-1/2 transform -translate-x-1/2 -translate-y-10 z-0"
           style={{
             top: isScrolled ? -100 : 15,
-            transition: "top 0.7s ease",
+            transition: 'top 0.7s ease',
           }}
         >
-          <Image src={nav} alt="Nav" className="w-64 h-auto z-0" width={200} height={100} priority />
+          <Image
+            src={nav}
+            alt="Nav"
+            className="w-64 h-auto z-0"
+            width={200}
+            height={100}
+            priority
+          />
         </div>
         <div className="flex-shrink-0 relative z-10">
           <a href="https://www.triggerx.network/" target="blank">
@@ -184,26 +198,21 @@ function Header() {
             <ConnectButton chainStatus="none" accountStatus="address" />
           </div>
           <div className="lg:hidden">
-            <h4
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="text-white text-2xl"
-            >
-              {menuOpen ? "✖" : "☰"}
+            <h4 onClick={() => setMenuOpen(!menuOpen)} className="text-white text-2xl">
+              {menuOpen ? '✖' : '☰'}
             </h4>
             {menuOpen && (
               <div className="absolute top-full right-0 mt-3 bg-[#181818] p-4 rounded-md shadow-lg z-10 min-w-[200px]">
                 <div className="flex flex-col gap-4 text-white ">
                   <h4
                     onClick={() => {
-                      router.push("/devhub");
+                      router.push('/devhub');
                       setMenuOpen(false);
                     }}
                     className={`w-full 
                          
                         ${
-                          isActiveRoute("/devhub")
-                            ? "text-white"
-                            : "text-gray-400"
+                          isActiveRoute('/devhub') ? 'text-white' : 'text-gray-400'
                         }  px-7 py-3 rounded-xl cursor-pointer`}
                   >
                     Dev Hub
@@ -211,37 +220,33 @@ function Header() {
 
                   <h4
                     onClick={() => {
-                      router.push("/");
+                      router.push('/');
                       setMenuOpen(false);
                     }}
                     className={`w-full ${
-                      isActiveRoute("/") ? "text-white" : "text-gray-400"
+                      isActiveRoute('/') ? 'text-white' : 'text-gray-400'
                     }  px-7 py-3 rounded-xl cursor-pointer`}
                   >
                     Create Job
                   </h4>
                   <h4
                     onClick={() => {
-                      router.push("/dashboard");
+                      router.push('/dashboard');
                       setMenuOpen(false);
                     }}
                     className={` w-full  ${
-                      isActiveRoute("/dashboard")
-                        ? "text-white"
-                        : "text-gray-400"
+                      isActiveRoute('/dashboard') ? 'text-white' : 'text-gray-400'
                     }  px-7 py-3 rounded-xl cursor-pointer`}
                   >
                     Dashboard
                   </h4>
                   <h4
                     onClick={() => {
-                      router.push("/leaderboard");
+                      router.push('/leaderboard');
                       setMenuOpen(false);
                     }}
                     className={` w-full  ${
-                      isActiveRoute("/leaderboard")
-                        ? "text-white"
-                        : "text-gray-400"
+                      isActiveRoute('/leaderboard') ? 'text-white' : 'text-gray-400'
                     }  px-7 py-3 rounded-xl cursor-pointer`}
                   >
                     Leaderboard

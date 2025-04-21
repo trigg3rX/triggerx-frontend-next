@@ -1,35 +1,35 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import { PageHeader } from "../../components/createjob/PageHeader";
-import { useJobCreation } from "../../hooks/useJobCreation";
-import { ChevronDown } from "lucide-react";
-import { TimeframeInputs } from "../../components/createjob/TimeframeInputs";
-import { useTimeManagement } from "../../hooks/useTimeManagement";
-import { TimeIntervalInputs } from "../../components/createjob/TimeIntervalInputs";
-import { ContractDetails } from "../../components/createjob/ContractDetails";
-import { useContractInteraction } from "../../hooks/useContractInteraction";
-import { EstimatedFeeModal } from "../../components/createjob/EstimatedFeeModal";
-import { useStakeRegistry } from "../../hooks/useStakeRegistry";
-import { useAccount } from "wagmi";
-import { optimismSepolia, baseSepolia } from "wagmi/chains";
-import { Toaster, toast } from "react-hot-toast";
-import Layout from "@/components/layout/Layout";
-import Head from "next/head";
-import Image from "next/image";
-import CreateJobLoading from "./loading";
+import React, { useEffect, useRef, useState } from 'react';
+import { PageHeader } from '../../components/createjob/PageHeader';
+import { useJobCreation } from '../../hooks/useJobCreation';
+import { ChevronDown } from 'lucide-react';
+import { TimeframeInputs } from '../../components/createjob/TimeframeInputs';
+import { useTimeManagement } from '../../hooks/useTimeManagement';
+import { TimeIntervalInputs } from '../../components/createjob/TimeIntervalInputs';
+import { ContractDetails } from '../../components/createjob/ContractDetails';
+import { useContractInteraction } from '../../hooks/useContractInteraction';
+import { EstimatedFeeModal } from '../../components/createjob/EstimatedFeeModal';
+import { useStakeRegistry } from '../../hooks/useStakeRegistry';
+import { useAccount } from 'wagmi';
+import { optimismSepolia, baseSepolia } from 'wagmi/chains';
+import { Toaster, toast } from 'react-hot-toast';
+import Layout from '@/components/layout/Layout';
+import Head from 'next/head';
+import Image from 'next/image';
+import CreateJobLoading from './loading';
 
-import timeBasedIcon from "../../assets/time-based.gif";
-import conditionBasedIcon from "../../assets/condition-based.gif";
-import eventBasedIcon from "../../assets/event-based.gif";
-import timeBasedGif from "../../assets/time-based.gif";
-import conditionBasedGif from "../../assets/condition-based.gif";
-import eventBasedGif from "../../assets/event-based.gif";
+import timeBasedIcon from '../../assets/time-based.gif';
+import conditionBasedIcon from '../../assets/condition-based.gif';
+import eventBasedIcon from '../../assets/event-based.gif';
+import timeBasedGif from '../../assets/time-based.gif';
+import conditionBasedGif from '../../assets/condition-based.gif';
+import eventBasedGif from '../../assets/event-based.gif';
 
-import DeleteConfirmationButton from "../../components/createjob/DeleteConfirmationButton";
-import { WarningOutlined } from "@ant-design/icons";
-import { useProxyFactory } from "../../hooks/useProxyFactory";
-import { randomBytes } from "ethers";
+import DeleteConfirmationButton from '../../components/createjob/DeleteConfirmationButton';
+import { WarningOutlined } from '@ant-design/icons';
+import { useProxyFactory } from '../../hooks/useProxyFactory';
+import { randomBytes } from 'ethers';
 
 const networkIcons = {
   [optimismSepolia.name]: (
@@ -55,29 +55,25 @@ const networkIcons = {
 const supportedNetworks = [optimismSepolia, baseSepolia];
 
 const useFormKeyboardNavigation = () => {
-
   const handleKeyDown = (event) => {
-    if (event.key === "Enter" && event.target.tagName !== "TEXTAREA") {
+    if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
       event.preventDefault();
 
-      const form = event.target.closest("form");
+      const form = event.target.closest('form');
       if (!form) return;
 
       const focusableElements = [
         ...form.querySelectorAll(
           'input, select, button, [tabindex]:not([tabindex="-1"]), [role="button"]'
         ),
-      ].filter(
-        (el) =>
-          !el.disabled && el.style.display !== "none" && el.type !== "submit"
-      );
+      ].filter((el) => !el.disabled && el.style.display !== 'none' && el.type !== 'submit');
 
       const currentIndex = focusableElements.indexOf(event.target);
 
       if (
-        event.target.getAttribute("role") === "button" ||
+        event.target.getAttribute('role') === 'button' ||
         event.target.closest('[role="button"]') ||
-        event.target.classList.contains("cursor-pointer")
+        event.target.classList.contains('cursor-pointer')
       ) {
         event.target.click();
         return;
@@ -93,35 +89,33 @@ const useFormKeyboardNavigation = () => {
 
 const options = [
   {
-    value: "1",
-    label: "Time-based Trigger",
+    value: '1',
+    label: 'Time-based Trigger',
     icon: timeBasedIcon,
     gif: timeBasedGif,
   },
   {
-    value: "2",
-    label: "Condition-based Trigger",
+    value: '2',
+    label: 'Condition-based Trigger',
     icon: conditionBasedIcon,
     gif: conditionBasedGif,
   },
   {
-    value: "3",
-    label: "Event-based Trigger",
+    value: '3',
+    label: 'Event-based Trigger',
     icon: eventBasedIcon,
     gif: eventBasedGif,
   },
 ];
 
 function CreateJobPage() {
-  const [selectedNetwork, setSelectedNetwork] = useState(
-    supportedNetworks[0].name
-  );
+  const [selectedNetwork, setSelectedNetwork] = useState(supportedNetworks[0].name);
   const [triggerChainId, setTriggerChainId] = useState(supportedNetworks[0].id);
   const [isNetworkOpen, setIsNetworkOpen] = useState(false);
   const [linkedJobs, setLinkedJobs] = useState({});
   const [isEventOpen, setIsEventOpen] = useState(false);
   const [jobDetails, setJobDetails] = useState([]);
-  const [conditionScript, setConditionScript] = useState("");
+  const [conditionScript, setConditionScript] = useState('');
   const { address, isConnected } = useAccount();
   const [connected, setConnected] = useState(false);
   const formRef = useRef(null);
@@ -135,21 +129,21 @@ function CreateJobPage() {
   useEffect(() => {
     const checkConnection = async () => {
       if (!window.ethereum) {
-        toast.error("Please install MetaMask to use this application!");
+        toast.error('Please install MetaMask to use this application!');
         setConnected(false);
         return;
       }
       try {
         const accounts = await window.ethereum.request({
-          method: "eth_accounts",
+          method: 'eth_accounts',
         });
         if (accounts.length === 0) {
           toast.dismiss();
-          toast.error("Please connect your wallet to continue!");
+          toast.error('Please connect your wallet to continue!');
         }
         setConnected(accounts.length > 0);
       } catch (error) {
-        toast.error("Failed to check wallet connection!");
+        toast.error('Failed to check wallet connection!');
         setConnected(false);
       }
     };
@@ -163,22 +157,19 @@ function CreateJobPage() {
         setLoading(false);
       }, 1000);
     };
-    
+
     loadData();
   }, []);
 
   const eventdropdownRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        eventdropdownRef.current &&
-        !eventdropdownRef.current.contains(event.target)
-      ) {
+      if (eventdropdownRef.current && !eventdropdownRef.current.contains(event.target)) {
         setIsEventOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const dropdownRef = useRef(null);
@@ -189,22 +180,22 @@ function CreateJobPage() {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const [processSteps, setProcessSteps] = useState([
-    { id: 1, text: "Updating Database", status: "pending" },
-    { id: 2, text: "Validating Job", status: "pending" },
-    { id: 3, text: "Calculating Fees", status: "pending" },
+    { id: 1, text: 'Updating Database', status: 'pending' },
+    { id: 2, text: 'Validating Job', status: 'pending' },
+    { id: 3, text: 'Calculating Fees', status: 'pending' },
   ]);
   const [showProcessModal, setShowProcessModal] = useState(false);
 
   const resetProcessSteps = () => {
     setProcessSteps([
-      { id: 1, text: "Updating Database", status: "pending" },
-      { id: 2, text: "Validating Job", status: "pending" },
-      { id: 3, text: "Calculating Fees", status: "pending" },
+      { id: 1, text: 'Updating Database', status: 'pending' },
+      { id: 2, text: 'Validating Job', status: 'pending' },
+      { id: 3, text: 'Calculating Fees', status: 'pending' },
     ]);
   };
 
@@ -219,13 +210,13 @@ function CreateJobPage() {
           [jobType]: {
             ...prevDetails[jobType],
             [newJobId]: {
-              contractAddress: "",
-              contractABI: "",
+              contractAddress: '',
+              contractABI: '',
               functions: [],
-              targetFunction: "",
-              argumentType: "static",
+              targetFunction: '',
+              argumentType: 'static',
               argsArray: [],
-              ipfsCodeUrl: "",
+              ipfsCodeUrl: '',
             },
           },
         }));
@@ -248,9 +239,7 @@ function CreateJobPage() {
       };
 
       if (updatedJobs[jobType]) {
-        updatedJobs[jobType] = updatedJobs[jobType].map(
-          (id, index) => index + 1
-        );
+        updatedJobs[jobType] = updatedJobs[jobType].map((id, index) => index + 1);
       }
 
       if (updatedJobs[jobType]?.length === 0) {
@@ -267,7 +256,7 @@ function CreateJobPage() {
       };
 
       const jobIds = Object.keys(updatedDetails[jobType])
-        .filter((key) => key !== "main")
+        .filter((key) => key !== 'main')
         .sort((a, b) => parseInt(a) - parseInt(b));
 
       if (jobIds.length === 0) {
@@ -284,7 +273,7 @@ function CreateJobPage() {
 
       if (
         Object.keys(updatedDetails[jobType]).length === 1 &&
-        updatedDetails[jobType]["main"] !== undefined
+        updatedDetails[jobType]['main'] !== undefined
       ) {
       }
 
@@ -320,8 +309,7 @@ function CreateJobPage() {
     handleSubmit,
   } = useJobCreation();
 
-  const { stakeRegistryAddress, stakeRegistryImplAddress, stakeRegistryABI } =
-    useStakeRegistry();
+  const { stakeRegistryAddress, stakeRegistryImplAddress, stakeRegistryABI } = useStakeRegistry();
 
   const handleContractDetailChange = (jobType, jobKey, field, value) => {
     setContractDetails((prevDetails) => ({
@@ -341,34 +329,30 @@ function CreateJobPage() {
       ...prevDetails,
       [jobType]: prevDetails[jobType] || {
         main: {
-          contractAddress: "",
-          contractABI: "",
+          contractAddress: '',
+          contractABI: '',
           functions: [],
-          targetFunction: "",
-          argumentType: "static",
+          targetFunction: '',
+          argumentType: 'static',
           argsArray: [],
-          ipfsCodeUrl: "",
+          ipfsCodeUrl: '',
         },
       },
     }));
   }, [jobType]);
 
-  const eventContractInteraction = useContractInteraction("job-3");
+  const eventContractInteraction = useContractInteraction('job-3');
 
   const handleFormSubmit = async (e, jobType) => {
     e.preventDefault();
 
-    if (
-      timeframe.years === 0 &&
-      timeframe.months === 0 &&
-      timeframe.days === 0
-    ) {
-      setErrorFrame("Please set a valid timeframe before submitting.");
+    if (timeframe.years === 0 && timeframe.months === 0 && timeframe.days === 0) {
+      setErrorFrame('Please set a valid timeframe before submitting.');
 
       setTimeout(() => {
         errorFrameRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
+          behavior: 'smooth',
+          block: 'center',
         });
       }, 100);
 
@@ -376,21 +360,16 @@ function CreateJobPage() {
     }
     if (jobType === 1) {
       if (
-        (timeInterval.hours === 0 &&
-          timeInterval.minutes === 0 &&
-          timeInterval.seconds === 0) ||
-        timeInterval.hours * 3600 +
-        timeInterval.minutes * 60 +
-        timeInterval.seconds <
-        30
+        (timeInterval.hours === 0 && timeInterval.minutes === 0 && timeInterval.seconds === 0) ||
+        timeInterval.hours * 3600 + timeInterval.minutes * 60 + timeInterval.seconds < 30
       ) {
         setErrorInterval(
-          "Please set a valid time interval of at least 30 seconds before submitting."
+          'Please set a valid time interval of at least 30 seconds before submitting.'
         );
         setTimeout(() => {
           errorIntervalRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
+            behavior: 'smooth',
+            block: 'center',
           });
         }, 100);
         return;
@@ -399,7 +378,7 @@ function CreateJobPage() {
 
     try {
       const allJobsDetails = [];
-      const mainJobDetails = contractDetails[jobType]?.["main"];
+      const mainJobDetails = contractDetails[jobType]?.['main'];
 
       const { proxyAddress: mainProxyAddress } = await deployNewProxy(
         mainJobDetails.contractAddress,
@@ -407,7 +386,7 @@ function CreateJobPage() {
       );
 
       const getTaskDefinitionId = (argumentType) => {
-        return argumentType === "static"
+        return argumentType === 'static'
           ? jobType === 1
             ? 1
             : jobType === 2
@@ -420,7 +399,7 @@ function CreateJobPage() {
               : 4;
       };
 
-      const getArgType = (argumentType) => argumentType === "static" ? 0 : 1;
+      const getArgType = (argumentType) => (argumentType === 'static' ? 0 : 1);
 
       if (mainJobDetails) {
         const taskdefinitionid = getTaskDefinitionId(mainJobDetails.argumentType);
@@ -440,15 +419,15 @@ function CreateJobPage() {
           trigger_chain_id: triggerChainId.toString(),
           trigger_contract_address: mainJobDetails.contractAddress,
           abstraction_contract: mainProxyAddress,
-          trigger_event: "NULL",
-          script_ipfs_url: mainJobDetails.ipfsCodeUrl || "",
-          script_target_function: "trigger",
+          trigger_event: 'NULL',
+          script_ipfs_url: mainJobDetails.ipfsCodeUrl || '',
+          script_target_function: 'trigger',
           target_chain_id: triggerChainId.toString(),
-          target_contract_address: "NULL",
+          target_contract_address: 'NULL',
           target_function: mainJobDetails.targetFunction,
           arg_type: argType,
           arguments: mainJobDetails.argsArray,
-          script_trigger_function: "action",
+          script_trigger_function: 'action',
           hasABI: !!mainJobDetails.contractABI,
           contractABI: mainJobDetails.contractABI,
         });
@@ -459,7 +438,7 @@ function CreateJobPage() {
           const linkedJobDetails = contractDetails[jobType]?.[jobId];
 
           let linkedProxyAddress = mainProxyAddress;
-          if(mainJobDetails.contractAddress !== linkedJobDetails.contractAddress){
+          if (mainJobDetails.contractAddress !== linkedJobDetails.contractAddress) {
             const { proxyAddress: linkedProxyAddress } = await deployNewProxy(
               linkedJobDetails.contractAddress,
               address
@@ -484,15 +463,15 @@ function CreateJobPage() {
               trigger_chain_id: triggerChainId.toString(),
               trigger_contract_address: linkedJobDetails.contractAddress,
               abstraction_contract: linkedProxyAddress,
-              trigger_event: "NULL",
-              script_ipfs_url: linkedJobDetails.ipfsCodeUrl || "",
-              script_target_function: "trigger",
+              trigger_event: 'NULL',
+              script_ipfs_url: linkedJobDetails.ipfsCodeUrl || '',
+              script_target_function: 'trigger',
               target_chain_id: triggerChainId.toString(),
-              target_contract_address: "NULL",
+              target_contract_address: 'NULL',
               target_function: linkedJobDetails.targetFunction,
               arg_type: argType,
               arguments: linkedJobDetails.argsArray,
-              script_trigger_function: "action",
+              script_trigger_function: 'action',
               hasABI: !!linkedJobDetails.contractABI,
               contractABI: linkedJobDetails.contractABI,
             });
@@ -500,7 +479,7 @@ function CreateJobPage() {
         }
       }
       setIsLoading(true);
-      console.log("Job Details", allJobsDetails);
+      console.log('Job Details', allJobsDetails);
       setJobDetails(allJobsDetails);
 
       const codeUrls = allJobsDetails.map((job) => job.script_ipfs_url);
@@ -510,41 +489,31 @@ function CreateJobPage() {
         setShowProcessModal(true);
 
         setProcessSteps((prev) =>
-          prev.map((step) =>
-            step.id === 1 ? { ...step, status: "pending" } : step
-          )
+          prev.map((step) => (step.id === 1 ? { ...step, status: 'pending' } : step))
         );
 
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
         setProcessSteps((prev) =>
-          prev.map((step) =>
-            step.id === 1 ? { ...step, status: "completed" } : step
-          )
+          prev.map((step) => (step.id === 1 ? { ...step, status: 'completed' } : step))
         );
 
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         setProcessSteps((prev) =>
-          prev.map((step) =>
-            step.id === 2 ? { ...step, status: "pending" } : step
-          )
+          prev.map((step) => (step.id === 2 ? { ...step, status: 'pending' } : step))
         );
 
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
         setProcessSteps((prev) =>
-          prev.map((step) =>
-            step.id === 2 ? { ...step, status: "completed" } : step
-          )
+          prev.map((step) => (step.id === 2 ? { ...step, status: 'completed' } : step))
         );
 
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         setProcessSteps((prev) =>
-          prev.map((step) =>
-            step.id === 3 ? { ...step, status: "pending" } : step
-          )
+          prev.map((step) => (step.id === 3 ? { ...step, status: 'pending' } : step))
         );
 
         await estimateFee(
@@ -558,33 +527,27 @@ function CreateJobPage() {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         setProcessSteps((prev) =>
-          prev.map((step) =>
-            step.id === 3 ? { ...step, status: "completed" } : step
-          )
+          prev.map((step) => (step.id === 3 ? { ...step, status: 'completed' } : step))
         );
 
-        if (processSteps.every((step) => step.status === "completed")) {
+        if (processSteps.every((step) => step.status === 'completed')) {
           setIsModalOpen(true);
           setShowProcessModal(false);
-          toast.success("Job created successfully !");
+          toast.success('Job created successfully !');
         }
       } catch (error) {
-        console.error("Error during fee estimation:", error);
+        console.error('Error during fee estimation:', error);
         setProcessSteps((prev) =>
-          prev.map((step) =>
-            step.id === 3 ? { ...step, status: "error" } : step
-          )
+          prev.map((step) => (step.id === 3 ? { ...step, status: 'error' } : step))
         );
-        toast.error("Failed to estimate fee!");
+        toast.error('Failed to estimate fee!');
       }
     } catch (error) {
-      console.error("Error during job creation:", error);
+      console.error('Error during job creation:', error);
       setProcessSteps((prev) =>
-        prev.map((step) =>
-          step.status === "pending" ? { ...step, status: "error" } : step
-        )
+        prev.map((step) => (step.status === 'pending' ? { ...step, status: 'error' } : step))
       );
-      toast.error("Failed to create job!");
+      toast.error('Failed to create job!');
     }
   };
 
@@ -609,21 +572,19 @@ function CreateJobPage() {
         <meta name="twitter:title" content="TriggerX | Build" />
         <meta name="twitter:description" content="Automate Tasks Effortlessly" />
         <meta name="twitter:image" content={`${baseUrl}/images/build-og.png`} />
-
       </Head>
       <Toaster
         position="center"
         className="mt-10"
         toastOptions={{
           style: {
-            background: "#0a0a0a",
-            color: "#fff",
-            borderRadius: "8px",
-            border: "1px gray solid",
+            background: '#0a0a0a',
+            color: '#fff',
+            borderRadius: '8px',
+            border: '1px gray solid',
           },
         }}
       />
-
 
       <div className="min-h-screen text-white pt-10 md:pt-20 lg:pt-32 pb-20 mt-[5rem] lg:mt-[9rem] relative">
         <div className="fixed inset-0  pointer-events-none" />
@@ -652,29 +613,21 @@ function CreateJobPage() {
                           handleJobTypeChange(e, option.value);
                         }
                       }}
-                      className={`${Number(option.value) === jobType
-                          ? "bg-gradient-to-r from-[#D9D9D924] to-[#14131324] border border-white"
-                          : "bg-white/5 border border-white/10 "
-                        } text-nowrap relative flex flex-wrap flex-col items-center justify-center w-full md:w-[33%] gap-2 px-4 pb-4 pt-8 rounded-lg transition-all duration-300 text-xs xs:text-base`}
+                      className={`${
+                        Number(option.value) === jobType
+                          ? 'bg-gradient-to-r from-[#D9D9D924] to-[#14131324] border border-white'
+                          : 'bg-white/5 border border-white/10 '
+                      } text-nowrap relative flex flex-wrap flex-col items-center justify-center w-full md:w-[33%] gap-2 px-4 pb-4 pt-8 rounded-lg transition-all duration-300 text-xs xs:text-base`}
                     >
                       <div
-                        className={`${Number(option.value) === jobType
-                            ? "bg-white border border-white/10"
-                            : ""
-                          } absolute top-2 left-2 rounded-full w-3 h-3 border`}
+                        className={`${
+                          Number(option.value) === jobType ? 'bg-white border border-white/10' : ''
+                        } absolute top-2 left-2 rounded-full w-3 h-3 border`}
                       ></div>
                       {Number(option.value) === jobType ? (
-                        <Image
-                          src={option.gif}
-                          alt={option.label}
-                          className="w-auto h-8"
-                        />
+                        <Image src={option.gif} alt={option.label} className="w-auto h-8" />
                       ) : (
-                        <Image
-                          src={option.icon}
-                          alt={option.label}
-                          className="w-auto h-8"
-                        />
+                        <Image src={option.icon} alt={option.label} className="w-auto h-8" />
                       )}
                       <span>{option.label}</span>
                     </button>
@@ -689,10 +642,7 @@ function CreateJobPage() {
                       <label className="block text-sm sm:text-base font-medium text-gray-300 text-nowrap">
                         Network
                       </label>
-                      <div
-                        ref={dropdownRef}
-                        className="relative w-full md:w-[70%] xl:w-[80%]"
-                      >
+                      <div ref={dropdownRef} className="relative w-full md:w-[70%] xl:w-[80%]">
                         <div
                           className="w-full bg-[#1a1a1a] text-white py-3 px-4 rounded-lg cursor-pointer border border-white/10 flex items-center gap-5"
                           onClick={() => setIsNetworkOpen((prev) => !prev)}
@@ -715,9 +665,7 @@ function CreateJobPage() {
                                   setIsNetworkOpen(false);
                                 }}
                               >
-                                <div className="w-6 h-6">
-                                  {networkIcons[network.name] || null}
-                                </div>
+                                <div className="w-6 h-6">{networkIcons[network.name] || null}</div>
                                 {network.name}
                               </div>
                             ))}
@@ -784,9 +732,7 @@ function CreateJobPage() {
                             type="text"
                             id="contractAddress"
                             value={eventContractInteraction.contractAddress}
-                            onChange={
-                              eventContractInteraction.handleContractAddressChange
-                            }
+                            onChange={eventContractInteraction.handleContractAddressChange}
                             placeholder="Your Contract address"
                             className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none"
                             required
@@ -817,7 +763,7 @@ function CreateJobPage() {
                                 ) : (
                                   <div className="flex items-center ml-3">
                                     <h4 className="text-gray-400 pr-2 text-xs xs:text-sm sm:text-base">
-                                      Not Available{" "}
+                                      Not Available{' '}
                                     </h4>
                                     <h4 className="text-red-400 mt-[2px]">✕</h4>
                                   </div>
@@ -837,8 +783,7 @@ function CreateJobPage() {
                                   className="w-full bg-[#1a1a1a] text-white py-3 px-4 rounded-lg cursor-pointer border border-white/10 flex items-center justify-between"
                                   onClick={() => setIsEventOpen(!isEventOpen)}
                                 >
-                                  {eventContractInteraction.targetEvent ||
-                                    "Select an event"}
+                                  {eventContractInteraction.targetEvent || 'Select an event'}
                                   <ChevronDown className="text-white text-xs" />
                                 </div>
                                 {isEventOpen && (
@@ -846,30 +791,25 @@ function CreateJobPage() {
                                     ref={eventdropdownRef}
                                     className="absolute top-14 w-full bg-[#1a1a1a] border border-white/10 rounded-lg overflow-hidden shadow-lg"
                                   >
-                                    {eventContractInteraction.events.map(
-                                      (func, index) => {
-                                        const signature = `${func.name
-                                          }(${func.inputs
-                                            .map((input) => input.type)
-                                            .join(",")})`;
-                                        return (
-                                          <div
-                                            key={index}
-                                            className="py-3 px-4 hover:bg-[#333] cursor-pointer rounded-lg"
-                                            onClick={() => {
-                                              eventContractInteraction.handleEventChange(
-                                                {
-                                                  target: { value: signature },
-                                                }
-                                              );
-                                              setIsEventOpen(false);
-                                            }}
-                                          >
-                                            {signature}
-                                          </div>
-                                        );
-                                      }
-                                    )}
+                                    {eventContractInteraction.events.map((func, index) => {
+                                      const signature = `${func.name}(${func.inputs
+                                        .map((input) => input.type)
+                                        .join(',')})`;
+                                      return (
+                                        <div
+                                          key={index}
+                                          className="py-3 px-4 hover:bg-[#333] cursor-pointer rounded-lg"
+                                          onClick={() => {
+                                            eventContractInteraction.handleEventChange({
+                                              target: { value: signature },
+                                            });
+                                            setIsEventOpen(false);
+                                          }}
+                                        >
+                                          {signature}
+                                        </div>
+                                      );
+                                    })}
                                   </div>
                                 )}
                               </div>
@@ -878,9 +818,8 @@ function CreateJobPage() {
                             {eventContractInteraction.events.length === 0 &&
                               eventContractInteraction.contractAddress && (
                                 <h4 className="w-full md:w-[67%] xl:w-[78%] ml-auto  text-sm text-yellow-400">
-                                  No writable events found. Make sure the
-                                  contract is verified on Blockscout /
-                                  Etherscan.
+                                  No writable events found. Make sure the contract is verified on
+                                  Blockscout / Etherscan.
                                 </h4>
                               )}
                           </>
@@ -889,84 +828,33 @@ function CreateJobPage() {
                     )}
 
                     <ContractDetails
-                      contractAddress={
-                        contractDetails[jobType]?.["main"]?.contractAddress ||
-                        ""
-                      }
+                      contractAddress={contractDetails[jobType]?.['main']?.contractAddress || ''}
                       setContractAddress={(value) =>
-                        handleContractDetailChange(
-                          jobType,
-                          "main",
-                          "contractAddress",
-                          value
-                        )
+                        handleContractDetailChange(jobType, 'main', 'contractAddress', value)
                       }
-                      contractABI={
-                        contractDetails[jobType]?.["main"]?.contractABI || ""
-                      }
+                      contractABI={contractDetails[jobType]?.['main']?.contractABI || ''}
                       setContractABI={(value) =>
-                        handleContractDetailChange(
-                          jobType,
-                          "main",
-                          "contractABI",
-                          value
-                        )
+                        handleContractDetailChange(jobType, 'main', 'contractABI', value)
                       }
-                      functions={
-                        contractDetails[jobType]?.["main"]?.functions || []
-                      }
+                      functions={contractDetails[jobType]?.['main']?.functions || []}
                       setFunctions={(value) =>
-                        handleContractDetailChange(
-                          jobType,
-                          "main",
-                          "functions",
-                          value
-                        )
+                        handleContractDetailChange(jobType, 'main', 'functions', value)
                       }
-                      targetFunction={
-                        contractDetails[jobType]?.["main"]?.targetFunction || ""
-                      }
+                      targetFunction={contractDetails[jobType]?.['main']?.targetFunction || ''}
                       setTargetFunction={(value) =>
-                        handleContractDetailChange(
-                          jobType,
-                          "main",
-                          "targetFunction",
-                          value
-                        )
+                        handleContractDetailChange(jobType, 'main', 'targetFunction', value)
                       }
-                      argumentType={
-                        contractDetails[jobType]?.["main"]?.argumentType ||
-                        "static"
-                      }
+                      argumentType={contractDetails[jobType]?.['main']?.argumentType || 'static'}
                       setArgumentType={(value) =>
-                        handleContractDetailChange(
-                          jobType,
-                          "main",
-                          "argumentType",
-                          value
-                        )
+                        handleContractDetailChange(jobType, 'main', 'argumentType', value)
                       }
-                      argsArray={
-                        contractDetails[jobType]?.["main"]?.argsArray || []
-                      }
+                      argsArray={contractDetails[jobType]?.['main']?.argsArray || []}
                       setArgArray={(value) =>
-                        handleContractDetailChange(
-                          jobType,
-                          "main",
-                          "argsArray",
-                          value
-                        )
+                        handleContractDetailChange(jobType, 'main', 'argsArray', value)
                       }
-                      ipfsCodeUrl={
-                        contractDetails[jobType]?.["main"]?.ipfsCodeUrl || ""
-                      }
+                      ipfsCodeUrl={contractDetails[jobType]?.['main']?.ipfsCodeUrl || ''}
                       setIpfsCodeUrl={(value) =>
-                        handleContractDetailChange(
-                          jobType,
-                          "main",
-                          "ipfsCodeUrl",
-                          value
-                        )
+                        handleContractDetailChange(jobType, 'main', 'ipfsCodeUrl', value)
                       }
                     />
 
@@ -1017,9 +905,7 @@ function CreateJobPage() {
                               </label>
                               <div className="relative w-full md:w-[70%] xl:w-[80%]">
                                 <div className="text-xs xs:text-sm sm:text-base w-full bg-[#1a1a1a] text-white py-3 px-4 rounded-lg border border-white/10 flex items-center gap-5">
-                                  <div className="w-6 h-6">
-                                    {networkIcons[selectedNetwork]}
-                                  </div>
+                                  <div className="w-6 h-6">{networkIcons[selectedNetwork]}</div>
                                   {selectedNetwork}
                                 </div>
                               </div>
@@ -1027,88 +913,43 @@ function CreateJobPage() {
 
                             <ContractDetails
                               contractAddress={
-                                contractDetails[jobType]?.[jobKey]
-                                  ?.contractAddress || ""
+                                contractDetails[jobType]?.[jobKey]?.contractAddress || ''
                               }
                               setContractAddress={(value) =>
                                 handleContractDetailChange(
                                   jobType,
                                   jobKey,
-                                  "contractAddress",
+                                  'contractAddress',
                                   value
                                 )
                               }
-                              contractABI={
-                                contractDetails[jobType]?.[jobKey]
-                                  ?.contractABI || ""
-                              }
+                              contractABI={contractDetails[jobType]?.[jobKey]?.contractABI || ''}
                               setContractABI={(value) =>
-                                handleContractDetailChange(
-                                  jobType,
-                                  jobKey,
-                                  "contractABI",
-                                  value
-                                )
+                                handleContractDetailChange(jobType, jobKey, 'contractABI', value)
                               }
-                              functions={
-                                contractDetails[jobType]?.[jobKey]?.functions ||
-                                []
-                              }
+                              functions={contractDetails[jobType]?.[jobKey]?.functions || []}
                               setFunctions={(value) =>
-                                handleContractDetailChange(
-                                  jobType,
-                                  jobKey,
-                                  "functions",
-                                  value
-                                )
+                                handleContractDetailChange(jobType, jobKey, 'functions', value)
                               }
                               targetFunction={
-                                contractDetails[jobType]?.[jobKey]
-                                  ?.targetFunction || ""
+                                contractDetails[jobType]?.[jobKey]?.targetFunction || ''
                               }
                               setTargetFunction={(value) =>
-                                handleContractDetailChange(
-                                  jobType,
-                                  jobKey,
-                                  "targetFunction",
-                                  value
-                                )
+                                handleContractDetailChange(jobType, jobKey, 'targetFunction', value)
                               }
                               argumentType={
-                                contractDetails[jobType]?.[jobKey]
-                                  ?.argumentType || "static"
+                                contractDetails[jobType]?.[jobKey]?.argumentType || 'static'
                               }
                               setArgumentType={(value) =>
-                                handleContractDetailChange(
-                                  jobType,
-                                  jobKey,
-                                  "argumentType",
-                                  value
-                                )
+                                handleContractDetailChange(jobType, jobKey, 'argumentType', value)
                               }
-                              argsArray={
-                                contractDetails[jobType]?.[jobKey]?.argsArray ||
-                                []
-                              }
+                              argsArray={contractDetails[jobType]?.[jobKey]?.argsArray || []}
                               setArgArray={(value) =>
-                                handleContractDetailChange(
-                                  jobType,
-                                  jobKey,
-                                  "argsArray",
-                                  value
-                                )
+                                handleContractDetailChange(jobType, jobKey, 'argsArray', value)
                               }
-                              ipfsCodeUrl={
-                                contractDetails[jobType]?.[jobKey]
-                                  ?.ipfsCodeUrl || ""
-                              }
+                              ipfsCodeUrl={contractDetails[jobType]?.[jobKey]?.ipfsCodeUrl || ''}
                               setIpfsCodeUrl={(value) =>
-                                handleContractDetailChange(
-                                  jobType,
-                                  jobKey,
-                                  "ipfsCodeUrl",
-                                  value
-                                )
+                                handleContractDetailChange(jobType, jobKey, 'ipfsCodeUrl', value)
                               }
                             />
                           </div>
@@ -1134,13 +975,7 @@ function CreateJobPage() {
                             viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                            <ellipse
-                              className="spinner_rXNP"
-                              cx="9"
-                              cy="4"
-                              rx="3"
-                              ry="3"
-                            />
+                            <ellipse className="spinner_rXNP" cx="9" cy="4" rx="3" ry="3" />
                           </svg>
                         </span>
                       ) : (
@@ -1159,8 +994,9 @@ function CreateJobPage() {
                         <span className="absolute inset-0 bg-white rounded-full scale-100 translate-y-0 group-hover:translate-y-0"></span>
 
                         <span
-                          className={`${isLoading ? "cursor-not-allowed opacity-50 " : ""
-                            } font-actayRegular relative z-10 px-0 py-3 sm:px-3 md:px-6 lg:px-2 rounded-full translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out text-xs sm:text-base`}
+                          className={`${
+                            isLoading ? 'cursor-not-allowed opacity-50 ' : ''
+                          } font-actayRegular relative z-10 px-0 py-3 sm:px-3 md:px-6 lg:px-2 rounded-full translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out text-xs sm:text-base`}
                         >
                           Link Job
                         </span>
@@ -1185,7 +1021,7 @@ function CreateJobPage() {
           showFees={isModalOpen}
           steps={processSteps}
           onClose={() => {
-            console.log("Closing fee modal");
+            console.log('Closing fee modal');
             setIsModalOpen(false);
             setIsLoading(false);
             setProcessSteps(false);
@@ -1193,7 +1029,7 @@ function CreateJobPage() {
           }}
           estimatedFee={estimatedFee}
           onStake={() => {
-            console.log("Initiating stake with params:", {
+            console.log('Initiating stake with params:', {
               stakeRegistryImplAddress,
               hasABI: !!stakeRegistryABI,
               jobDetails,

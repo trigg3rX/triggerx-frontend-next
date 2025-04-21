@@ -7,14 +7,15 @@ export function useStakeRegistry() {
 
   useEffect(() => {
     const fetchStakeRegistryABI = async () => {
-      const url = 'https://raw.githubusercontent.com/trigg3rX/triggerx-contracts/main/contracts/script/output/stake.opsepolia.json';
+      const url =
+        'https://raw.githubusercontent.com/trigg3rX/triggerx-contracts/main/contracts/script/output/stake.opsepolia.json';
       try {
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        
+
         if (data && data.triggerXStakeRegistry) {
           const proxyAddress = data.triggerXStakeRegistry.proxy;
           const implAddress = data.triggerXStakeRegistry.implementation;
@@ -25,12 +26,12 @@ export function useStakeRegistry() {
         }
 
         const blockscoutUrl = `https://optimism-sepolia.blockscout.com/api?module=contract&action=getabi&address=${stakeRegistryImplAddress}`;
-        
+
         const abiResponse = await fetch(blockscoutUrl);
         if (!abiResponse.ok) {
           throw new Error('Failed to fetch ABI from Blockscout');
         }
-        
+
         const abiData = await abiResponse.json();
         if (abiData.status === '1' && abiData.result) {
           setStakeRegistryABI(JSON.parse(abiData.result));
@@ -48,6 +49,6 @@ export function useStakeRegistry() {
   return {
     stakeRegistryAddress,
     stakeRegistryImplAddress,
-    stakeRegistryABI
+    stakeRegistryABI,
   };
-} 
+}

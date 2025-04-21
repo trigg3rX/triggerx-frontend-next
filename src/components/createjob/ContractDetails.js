@@ -1,7 +1,7 @@
-import { ChevronDown } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { ethers } from "ethers";
-import axios from "axios";
+import { ChevronDown } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ethers } from 'ethers';
+import axios from 'axios';
 
 export function ContractDetails({
   contractAddress,
@@ -21,13 +21,11 @@ export function ContractDetails({
 }) {
   const [isFunctionOpen, setIsFunctionOpen] = useState(false);
   const [isArgumentTypeOpen, setIsArgumentTypeOpen] = useState(false);
-  const [addressError, setAddressError] = useState("");
-  const [ipfsCodeUrlError, setIpfsCodeUrlError] = useState("");
+  const [addressError, setAddressError] = useState('');
+  const [ipfsCodeUrlError, setIpfsCodeUrlError] = useState('');
 
   const selected = functions.find(
-    (f) =>
-      `${f.name}(${f.inputs.map((input) => input.type).join(",")})` ===
-      targetFunction
+    (f) => `${f.name}(${f.inputs.map((input) => input.type).join(',')})` === targetFunction
   );
   const hasArguments = selected?.inputs?.length > 0;
 
@@ -39,67 +37,64 @@ export function ContractDetails({
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const dropdown2Ref = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        dropdown2Ref.current &&
-        !dropdown2Ref.current.contains(event.target)
-      ) {
+      if (dropdown2Ref.current && !dropdown2Ref.current.contains(event.target)) {
         setIsArgumentTypeOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const validateAddress = (address) => {
     const isValid = /^0x[a-fA-F0-9]{40}$/.test(address);
-    setAddressError(isValid ? "" : "Invalid contract address");
+    setAddressError(isValid ? '' : 'Invalid contract address');
     return isValid;
   };
 
   function extractFunctions(abi) {
     try {
       let abiArray;
-      if (typeof abi === "string") {
+      if (typeof abi === 'string') {
         try {
           abiArray = JSON.parse(abi);
         } catch (e) {
-          throw new Error("Invalid ABI string format");
+          throw new Error('Invalid ABI string format');
         }
       } else if (Array.isArray(abi)) {
         abiArray = abi;
-      } else if (typeof abi === "object") {
+      } else if (typeof abi === 'object') {
         abiArray = [abi];
       } else {
-        throw new Error("ABI must be an array, object, or valid JSON string");
+        throw new Error('ABI must be an array, object, or valid JSON string');
       }
 
       if (!Array.isArray(abiArray)) {
-        throw new Error("Processed ABI is not an array");
+        throw new Error('Processed ABI is not an array');
       }
 
       const functions = abiArray
-        .filter((item) => item && item.type === "function")
+        .filter((item) => item && item.type === 'function')
         .map((func) => ({
-          name: func.name || "unnamed",
+          name: func.name || 'unnamed',
           inputs: func.inputs || [],
           outputs: func.outputs || [],
-          stateMutability: func.stateMutability || "nonpayable",
+          stateMutability: func.stateMutability || 'nonpayable',
           payable: func.payable || false,
           constant: func.constant || false,
         }));
 
-      console.log("Extracted functions:", functions);
+      console.log('Extracted functions:', functions);
       return functions;
     } catch (error) {
-      console.error("Error processing ABI:", error);
+      console.error('Error processing ABI:', error);
       return [];
     }
   }
@@ -108,7 +103,7 @@ export function ContractDetails({
     const address = e.target.value;
     validateAddress(address);
 
-    console.log("Contract address changed to:", address);
+    console.log('Contract address changed to:', address);
     setContractAddress(address);
 
     if (ethers.isAddress(address)) {
@@ -116,31 +111,29 @@ export function ContractDetails({
       try {
         const response = await axios.get(url);
         const data = response.data;
-        if (data.status === "1") {
+        if (data.status === '1') {
           const writableFunctions = extractFunctions(data.result).filter(
-            (func) =>
-              func.stateMutability === "nonpayable" ||
-              func.stateMutability === "payable"
+            (func) => func.stateMutability === 'nonpayable' || func.stateMutability === 'payable'
           );
-          console.log("Setting writable functions:", writableFunctions);
+          console.log('Setting writable functions:', writableFunctions);
           setFunctions(writableFunctions);
           setContractABI(data.result);
         } else {
           throw new Error(`Failed to fetch ABI: ${data.message}`);
         }
       } catch (error) {
-        console.error("Error fetching ABI:", error.message);
+        console.error('Error fetching ABI:', error.message);
         throw error;
       }
     } else {
-      console.log("Invalid address, clearing ABI");
-      setContractABI("");
+      console.log('Invalid address, clearing ABI');
+      setContractABI('');
     }
   };
 
   const handleFunctionChange = (e) => {
     const selectedValue = e.target.value;
-    console.log("Function selection changed to:", selectedValue);
+    console.log('Function selection changed to:', selectedValue);
     setTargetFunction(selectedValue);
   };
 
@@ -151,11 +144,11 @@ export function ContractDetails({
 
   const handleArgumentTypeChange = (e) => {
     const newType = e.target.value;
-    console.log("Argument type changed to:", newType);
+    console.log('Argument type changed to:', newType);
     setArgumentType(newType);
   };
 
-  const isDisabled = argumentType === "dynamic";
+  const isDisabled = argumentType === 'dynamic';
 
   const handleInputChange = (index, value) => {
     const newInputs = [...argsArray];
@@ -169,22 +162,20 @@ export function ContractDetails({
 
     // Validation logic:
     if (!value) {
-      setIpfsCodeUrlError("IPFS URL is required.");
+      setIpfsCodeUrlError('IPFS URL is required.');
     } else if (!isValidIpfsUrl(value)) {
-      setIpfsCodeUrlError("Invalid IPFS URL format.");
+      setIpfsCodeUrlError('Invalid IPFS URL format.');
     } else {
-      setIpfsCodeUrlError("");
+      setIpfsCodeUrlError('');
     }
   };
 
   const isValidIpfsUrl = (url) => {
-    return url.startsWith("ipfs://") || url.startsWith("https://");
+    return url.startsWith('ipfs://') || url.startsWith('https://');
   };
 
   const selectedFunction = functions.find((func) => {
-    const signature = `${func.name}(${func.inputs
-      .map((input) => input.type)
-      .join(",")})`;
+    const signature = `${func.name}(${func.inputs.map((input) => input.type).join(',')})`;
     return signature === targetFunction;
   });
   const functionInputs = selectedFunction?.inputs || [];
@@ -207,12 +198,10 @@ export function ContractDetails({
             onChange={handleContractAddressChange}
             placeholder="Your Contract address"
             className={`text-xs xs:text-sm sm:text-base w-full bg-white/5 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none ${
-              addressError ? "border-red-500" : "border-white/10"
+              addressError ? 'border-red-500' : 'border-white/10'
             }`}
           />
-          {addressError && (
-            <p className="text-red-500 text-xs mt-1 ml-1">{addressError}</p>
-          )}
+          {addressError && <p className="text-red-500 text-xs mt-1 ml-1">{addressError}</p>}
         </div>
       </div>
       {contractAddress && (
@@ -238,7 +227,7 @@ export function ContractDetails({
             ) : (
               <div className="flex items-center ml-3">
                 <h4 className="text-gray-400 pr-2 text-xs xs:text-sm sm:text-base">
-                  Not Available{" "}
+                  Not Available{' '}
                 </h4>
                 <h4 className="text-red-400 mt-[2px]"> ✕</h4>
               </div>
@@ -257,16 +246,13 @@ export function ContractDetails({
               Target Function
             </label>
 
-            <div
-              ref={dropdownRef}
-              className="relative w-full md:w-[70%] xl:w-[80%] z-50"
-            >
+            <div ref={dropdownRef} className="relative w-full md:w-[70%] xl:w-[80%] z-50">
               <div
                 className="break-all text-xs xs:text-sm sm:text-base w-full bg-[#1a1a1a] text-white py-3 px-4 rounded-lg cursor-pointer border border-white/10 flex items-center justify-between"
                 aria-required
                 onClick={() => setIsFunctionOpen(!isFunctionOpen)}
               >
-                {targetFunction || "Select a function"}
+                {targetFunction || 'Select a function'}
                 <ChevronDown className="text-white text-xs ml-4" />
               </div>
               {isFunctionOpen && (
@@ -274,7 +260,7 @@ export function ContractDetails({
                   {functions.map((func, index) => {
                     const signature = `${func.name}(${func.inputs
                       .map((input) => input.type)
-                      .join(",")})`;
+                      .join(',')})`;
                     return (
                       <div
                         key={index}
@@ -292,8 +278,8 @@ export function ContractDetails({
 
           {functions.length === 0 && contractAddress && (
             <h4 className="w-full md:w-[67%] xl:w-[78%] ml-auto text-xs xs:text-sm text-yellow-400">
-              No writable functions found. Make sure the contract is verified on
-              Blockscout / Etherscan.
+              No writable functions found. Make sure the contract is verified on Blockscout /
+              Etherscan.
             </h4>
           )}
 
@@ -306,29 +292,24 @@ export function ContractDetails({
                 >
                   Argument Type
                 </label>
-                <div
-                  ref={dropdown2Ref}
-                  className="relative w-full md:w-[70%] xl:w-[80%] z-30"
-                >
+                <div ref={dropdown2Ref} className="relative w-full md:w-[70%] xl:w-[80%] z-30">
                   <div
                     className={`text-xs xs:text-sm sm:text-base w-full bg-[#141414] text-white py-3 px-4 rounded-lg cursor-pointer border border-white/10 flex items-center justify-between ${
-                      !hasArguments ? "opacity-50 cursor-not-allowed" : ""
+                      !hasArguments ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
-                    onClick={() =>
-                      hasArguments && setIsArgumentTypeOpen(!isArgumentTypeOpen)
-                    }
+                    onClick={() => hasArguments && setIsArgumentTypeOpen(!isArgumentTypeOpen)}
                   >
-                    {argumentType === "static" ? "Static" : "Dynamic"}
+                    {argumentType === 'static' ? 'Static' : 'Dynamic'}
                     <ChevronDown className="text-white text-xs" />
                   </div>
                   <h4 className="w-full ml-1 mt-3 text-xs text-gray-400">
                     {hasArguments
-                      ? "Select how function arguments should be handled during execution"
-                      : "No arguments required for this function"}
+                      ? 'Select how function arguments should be handled during execution'
+                      : 'No arguments required for this function'}
                   </h4>
                   {isArgumentTypeOpen && hasArguments && (
                     <div className="absolute top-14 w-full bg-[#1a1a1a] border border-white/10 rounded-lg overflow-hidden shadow-lg">
-                      {["static", "dynamic"].map((type) => (
+                      {['static', 'dynamic'].map((type) => (
                         <div
                           key={type}
                           className="py-3 px-4 hover:bg-[#333] cursor-pointer rounded-lg text-xs xs:text-sm sm:text-base"
@@ -375,12 +356,10 @@ export function ContractDetails({
                 </label>
                 <input
                   type="text"
-                  value={argsArray[index] || ""}
+                  value={argsArray[index] || ''}
                   onChange={(e) => handleInputChange(index, e.target.value)}
                   className={`text-xs xs:text-sm sm:text-base w-full md:w-[60%] xl:w-[70%] bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none  ${
-                    isDisabled
-                      ? "opacity-50 cursor-not-allowed bg-gray-800"
-                      : ""
+                    isDisabled ? 'opacity-50 cursor-not-allowed bg-gray-800' : ''
                   }`}
                   placeholder={`Enter ${input.type}`}
                   disabled={isDisabled}
@@ -406,13 +385,11 @@ export function ContractDetails({
             required
             onChange={(e) => handleCodeUrlChange(e)}
             className={`text-xs xs:text-sm sm:text-base w-full bg-white/5 border rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none ${
-              ipfsCodeUrlError ? "border-red-500" : "border-white/10"
+              ipfsCodeUrlError ? 'border-red-500' : 'border-white/10'
             }`}
             placeholder="Enter IPFS URL or CID (e.g., ipfs://... or https://ipfs.io/ipfs/...)"
           />
-          {ipfsCodeUrlError && (
-            <p className="text-red-500 text-xs mt-1 ml-1">{ipfsCodeUrlError}</p>
-          )}
+          {ipfsCodeUrlError && <p className="text-red-500 text-xs mt-1 ml-1">{ipfsCodeUrlError}</p>}
           <h4 className="w-full ml-1 mt-3 text-xs text-gray-400">
             Provide an IPFS URL or CID, where your code is stored.
           </h4>

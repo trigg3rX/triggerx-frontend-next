@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState } from 'react';
 
 export function useTimeManagement() {
   const [timeframe, setTimeframe] = useState({ years: 0, months: 0, days: 0 });
@@ -9,9 +9,9 @@ export function useTimeManagement() {
     seconds: 0,
   });
   const [intervalInSeconds, setIntervalInSeconds] = useState(0);
-  const [errorFrame, setErrorFrame] = useState("");
+  const [errorFrame, setErrorFrame] = useState('');
   const errorFrameRef = useRef(null);
-  const [errorInterval, setErrorInterval] = useState("");
+  const [errorInterval, setErrorInterval] = useState('');
   const errorIntervalRef = useRef(null);
 
   const handleTimeframeChange = (field, value) => {
@@ -20,16 +20,12 @@ export function useTimeManagement() {
       updatedTimeframe.years * 31536000 +
       updatedTimeframe.months * 2592000 +
       updatedTimeframe.days * 86400;
-    console.log("Calculated timeframe in seconds:", updatedTimeframeInSeconds);
+    console.log('Calculated timeframe in seconds:', updatedTimeframeInSeconds);
 
     setTimeframe(updatedTimeframe);
     setTimeframeInSeconds(updatedTimeframeInSeconds);
-    if (
-      updatedTimeframe.years > 0 ||
-      updatedTimeframe.months > 0 ||
-      updatedTimeframe.days > 0
-    ) {
-      setErrorFrame("");
+    if (updatedTimeframe.years > 0 || updatedTimeframe.months > 0 || updatedTimeframe.days > 0) {
+      setErrorFrame('');
     }
   };
 
@@ -42,7 +38,7 @@ export function useTimeManagement() {
       updatedTimeInterval.hours * 3600 +
       updatedTimeInterval.minutes * 60 +
       updatedTimeInterval.seconds;
-    console.log("Calculated interval in seconds:", updatedIntervalInSeconds);
+    console.log('Calculated interval in seconds:', updatedIntervalInSeconds);
 
     setTimeInterval(updatedTimeInterval);
     setIntervalInSeconds(updatedIntervalInSeconds);
@@ -51,7 +47,7 @@ export function useTimeManagement() {
       updatedTimeInterval.minutes > 0 ||
       updatedTimeInterval.seconds > 0
     ) {
-      setErrorInterval("");
+      setErrorInterval('');
     }
   };
 

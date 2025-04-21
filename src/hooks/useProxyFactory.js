@@ -1,43 +1,43 @@
-import { useAccount, useChainId, useConfig, usePublicClient } from "wagmi";
-import ProxyFactory from "../artifacts/ProxyFactory.json";
-import { toast } from "react-hot-toast";
-import { ethers } from "ethers";
+import { useAccount, useChainId, useConfig, usePublicClient } from 'wagmi';
+import ProxyFactory from '../artifacts/ProxyFactory.json';
+import { toast } from 'react-hot-toast';
+import { ethers } from 'ethers';
 
 export function useProxyFactory() {
   const chainId = useChainId();
   const config = useConfig();
-  const chain = config.chains.find(c => c.id === chainId);
+  const chain = config.chains.find((c) => c.id === chainId);
   const publicClient = usePublicClient();
   const { address: userAddress } = useAccount();
 
   const generateSalt = async (targetAddress) => {
     try {
-      if (!publicClient) throw new Error("Public client not available");
-      if (!targetAddress) throw new Error("Target address is required");
-      if (!userAddress) throw new Error("User address is required");
-      
+      if (!publicClient) throw new Error('Public client not available');
+      if (!targetAddress) throw new Error('Target address is required');
+      if (!userAddress) throw new Error('User address is required');
+
       const nonce = await publicClient.getTransactionCount({
-        address: userAddress
+        address: userAddress,
       });
-      
+
       const saltString = `${targetAddress.toLowerCase()}-${userAddress.toLowerCase()}-${nonce}`;
-      console.log("Generating salt with:", saltString);
-      
+      console.log('Generating salt with:', saltString);
+
       const saltBytes = ethers.toUtf8Bytes(saltString);
       const salt = ethers.keccak256(saltBytes);
-      console.log("Generated salt:", salt);
-      
+      console.log('Generated salt:', salt);
+
       return salt;
     } catch (error) {
-      console.error("Error in generateSalt:", error);
+      console.error('Error in generateSalt:', error);
       throw error;
     }
   };
 
   const deployNewProxy = async (target, userAddress) => {
     try {
-      if (!target) throw new Error("Target address is required");
-      if (!userAddress) throw new Error("User address is required");
+      if (!target) throw new Error('Target address is required');
+      if (!userAddress) throw new Error('User address is required');
 
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -48,27 +48,27 @@ export function useProxyFactory() {
       );
 
       const salt = await generateSalt(target);
-      
+
       const proxyAddress = await factoryContract.getProxyAddress(target, salt);
-      console.log("Calculated proxy address:", proxyAddress);
-      
+      console.log('Calculated proxy address:', proxyAddress);
+
       const tx = await factoryContract.deployProxy(target, salt);
-      console.log("Deployment transaction:", tx);
+      console.log('Deployment transaction:', tx);
       await tx.wait();
 
       return {
         hash: tx.hash,
         salt,
-        proxyAddress
+        proxyAddress,
       };
     } catch (error) {
-      console.error("Error in deployNewProxy:", error);
-      toast.error("Failed to deploy proxy: " + error.message);
+      console.error('Error in deployNewProxy:', error);
+      toast.error('Failed to deploy proxy: ' + error.message);
       throw error;
     }
   };
 
   return {
-    deployNewProxy
+    deployNewProxy,
   };
 }
