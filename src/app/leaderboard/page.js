@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Tooltip } from 'antd';
 import Head from 'next/head';
 import Layout from '@/components/layout/Layout';
-import LeaderboardSkeleton from '../../components/leaderboard/LeaderboardSkeleton';
 import LeaderboardLoading from './loading';
 
 const Leaderboard = () => {

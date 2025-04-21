@@ -1,16 +1,17 @@
 'use client';
 
 import React from 'react';
-import Layout from '../../components/layout/Layout';
-import error from '../../assets/error.gif';
-import ghost from '../../assets/ghost.svg';
+import Layout from '@/components/layout/Layout';
+import Image from 'next/image';
+import error from '@/assets/error.gif';
+import ghost from '@/assets/ghost.svg';
 
-const NotFound = () => {
+export default function NotFound() {
   return (
     <Layout>
       <div className="my-[20rem]">
-        <div className="flex flex-col items-center justify-center  py-10 ">
-          <img src={error} alt="" className="w-[50%]" />
+        <div className="flex flex-col items-center justify-center py-10 ">
+          <Image src={error} alt="" className="w-[50%]" />
         </div>
         <div className="flex items-end flex-col w-[95%] mx-auto gap-10">
           <div className="text-end flex gap-5">
@@ -24,7 +25,7 @@ const NotFound = () => {
                 back on track Head back to the TriggerX homepage.
               </p>
             </div>
-            <img src={ghost} alt="" className="w-[50px]" />
+            <Image src={ghost} alt="" className="w-[50px]" />
           </div>
           <a href="/" target="_blank">
             <button className="relative bg-[#222222] text-[#000000] border border-[#222222] px-6 py-2 sm:px-8 sm:py-3 rounded-full group transition-transform">
@@ -39,6 +40,4 @@ const NotFound = () => {
       </div>
     </Layout>
   );
-};
-
-export default NotFound;
+} 

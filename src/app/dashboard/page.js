@@ -6,7 +6,6 @@ import { ethers } from 'ethers';
 import { useRouter } from 'next/navigation';
 import { useStakeRegistry } from '../../hooks/useStakeRegistry';
 import WalletModal from '../../components/ui/WalletModal';
-import DashboardSkeleton from '../../components/dashboard/DasboardSkeleton';
 import { Tooltip } from 'antd';
 import { useBalance, useAccount } from 'wagmi';
 import loader from '../../assets/load.gif';

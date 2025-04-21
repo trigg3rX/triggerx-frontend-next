@@ -7,8 +7,7 @@ import CreateJobPage from './createjob/page';
 import DashboardPage from './dashboard/page';
 import LeaderboardPage from './leaderboard/page';
 import DevhubPage from './devhub/page';
-import NotFound from './notfound/page';
-import ApiCreation from './createapi/page';
+import ApiCreation from './api/page';
 import Devhub from './devhub/page';
 
 const App = () => {
@@ -25,8 +24,6 @@ const App = () => {
     }
     if (pathname === '/api') return <ApiCreation />;
     console.log(pathname);
-
-    return <NotFound />;
   };
 
   return renderContent();
