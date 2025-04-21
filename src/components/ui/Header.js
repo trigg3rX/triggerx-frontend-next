@@ -10,6 +10,7 @@ import leaderboardNav from '../../assets/leaderboardNav.svg';
 import devhubNav from '../../assets/devhubNav.png';
 
 function Header() {
+  const hiddenPaths = ['/dashboard', '/leaderboard', '/devhub', '/api'];
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -58,15 +59,17 @@ function Header() {
     };
   }, []);
 
-  useEffect(() => {
-    if (pathname === '/leaderboard') {
-      setNavImage(leaderboardNav);
-    } else if (pathname === '/devhub') {
-      setNavImage(devhubNav);
-    } else {
-      setNavImage(nav);
-    }
-  }, [pathname]);
+  const shouldShowConnectButton = !hiddenPaths.some(path => location.pathname.includes(path));
+
+  // useEffect(() => {
+  //   if (pathname === '/leaderboard') {
+  //     setNavImage(leaderboardNav);
+  //   } else if (pathname === '/devhub') {
+  //     setNavImage(devhubNav);
+  //   } else {
+  //     setNavImage(nav);
+  //   }
+  // }, [pathname]);
 
   return (
     <div className="fixed top-0 left-0 right-0 w-full headerbg bg-[#0a0a0a]">
@@ -166,8 +169,7 @@ function Header() {
           </nav>
         </div>
         <div className="flex items-center">
-          {' '}
-          <ConnectButton chainStatus="icon" accountStatus="address" />
+        {shouldShowConnectButton &&   <ConnectButton chainStatus="icon" accountStatus="address" />}
         </div>
       </div>
       <div className="w-[90%] mx-auto flex justify-between items-center my-10 header sm:flex  lg:hidden md:flex">

@@ -285,6 +285,7 @@ function DevhubItem() {
               <span className="absolute inset-0 bg-[#F8FF7C] rounded-full scale-100 translate-y-0 group-hover:translate-y-0"></span>
               <a
                 href={postData.githubUrl || '#'}
+                target="_blank"
                 className="w-max relative z-10 rounded-full transition-all duration-300 ease-out text-xs sm:text-base flex items-center"
               >
                 <FaGithub className="mr-2" />
