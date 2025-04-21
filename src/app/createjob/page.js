@@ -28,7 +28,6 @@ import eventBasedGif from '../../assets/event-based.gif';
 
 import DeleteConfirmationButton from '../../components/createjob/DeleteConfirmationButton';
 import { WarningOutlined } from '@ant-design/icons';
-import { useProxyFactory } from '../../hooks/useProxyFactory';
 import { randomBytes } from 'ethers';
 
 const networkIcons = {
@@ -122,7 +121,6 @@ function CreateJobPage() {
   const { handleKeyDown } = useFormKeyboardNavigation();
   const [contractDetails, setContractDetails] = useState({});
   const [recurring, setRecurring] = useState(false);
-  const { deployNewProxy, isDeploying } = useProxyFactory();
   const baseUrl = 'https://app.triggerx.network';
   const [loading, setLoading] = useState(true);
 
@@ -380,11 +378,6 @@ function CreateJobPage() {
       const allJobsDetails = [];
       const mainJobDetails = contractDetails[jobType]?.['main'];
 
-      const { proxyAddress: mainProxyAddress } = await deployNewProxy(
-        mainJobDetails.contractAddress,
-        address
-      );
-
       const getTaskDefinitionId = (argumentType) => {
         return argumentType === 'static'
           ? jobType === 1
@@ -418,7 +411,6 @@ function CreateJobPage() {
           recurring: recurring,
           trigger_chain_id: triggerChainId.toString(),
           trigger_contract_address: mainJobDetails.contractAddress,
-          abstraction_contract: mainProxyAddress,
           trigger_event: 'NULL',
           script_ipfs_url: mainJobDetails.ipfsCodeUrl || '',
           script_target_function: 'trigger',
@@ -437,14 +429,6 @@ function CreateJobPage() {
         for (const jobId of linkedJobs[jobType]) {
           const linkedJobDetails = contractDetails[jobType]?.[jobId];
 
-          let linkedProxyAddress = mainProxyAddress;
-          if (mainJobDetails.contractAddress !== linkedJobDetails.contractAddress) {
-            const { proxyAddress: linkedProxyAddress } = await deployNewProxy(
-              linkedJobDetails.contractAddress,
-              address
-            );
-          }
-
           if (linkedJobDetails) {
             const taskdefinitionid = getTaskDefinitionId(linkedJobDetails.argumentType);
             const argType = getArgType(linkedJobDetails.argumentType);
@@ -462,7 +446,6 @@ function CreateJobPage() {
               recurring: false,
               trigger_chain_id: triggerChainId.toString(),
               trigger_contract_address: linkedJobDetails.contractAddress,
-              abstraction_contract: linkedProxyAddress,
               trigger_event: 'NULL',
               script_ipfs_url: linkedJobDetails.ipfsCodeUrl || '',
               script_target_function: 'trigger',
