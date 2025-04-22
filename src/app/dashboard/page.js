@@ -131,7 +131,7 @@ function DashboardPage() {
     try {
       const signer = await provider.getSigner();
       const userAddress = await signer.getAddress();
-      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
       const response = await fetch(`${API_BASE_URL}/api/jobs/user/${userAddress}`);
       if (!response.ok) {
@@ -269,7 +269,7 @@ function DashboardPage() {
 
   const handleDeleteJob = async (jobId) => {
     try {
-      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
       const response = await fetch(`${API_BASE_URL}/api/jobs/delete/${jobId}`, {
         method: 'PUT',

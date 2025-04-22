@@ -53,7 +53,7 @@ export function useJobCreation() {
 
       if (codeUrls) {
         try {
-          const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+          const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
           const response = await fetch(
             `${API_BASE_URL}/api/fees?ipfs_url=${encodeURIComponent(codeUrls)}`,
             {
@@ -159,7 +159,7 @@ export function useJobCreation() {
         toast.success('ETH staked successfully!');
       }
 
-      const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
       const response = await fetch(`${API_BASE_URL}/api/jobs`, {
         method: 'POST',

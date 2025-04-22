@@ -24,14 +24,14 @@ const ApiCreation = () => {
 
   const generateNewApiKey = async () => {
     try {
-      const user = process.env.REACT_APP_USER;
+      const user = process.env.NEXT_PUBLIC_USER;
       if (!user) {
         console.error("Owner is not defined in environment variables");
         return;
       }
 
       const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL}/api/${user}/api-keys`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/${user}/api-keys`,
         {
           method: "POST",
           headers: {
